@@ -20,21 +20,21 @@ Before you install any packages, add my public key to your keyring.
 First, initialize the pacman keyring:
 
 ```bash
-# pacman-key --init
+pacman-key --init
 ```
 
 Then, import my public key, verify the fingerpint and locally sign it:
 
 ```bash
-# pacman-key -r 5C7B49424E175733
-# pacman-key -f 5C7B49424E175733
-# pacman-key --lsign-key 5C7B49424E175733
+pacman-key -r 5C7B49424E175733
+pacman-key -f 5C7B49424E175733
+pacman-key --lsign-key 5C7B49424E175733
 ```
 
 Finally, refresh your pacman cache:
 
 ```bash
-# pacman -Sy
+pacman -Sy
 ```
 
 All commands must be executed with root privileges.
