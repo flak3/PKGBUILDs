@@ -1,0 +1,28 @@
+HTS_USER=hts
+HTS_GROUP=video
+HTS_HOME=/var/lib/tvheadend
+
+post_install() {
+  if ! getent passwd $HTS_USER &> /dev/null; then
+    useradd -r -g $HTS_GROUP -m -d $HTS_HOME -m -s /bin/false $HTS_USER &> /dev/null
+    passwd -l $HTS_USER &> /dev/null
+
+    # make sure residual folders/files are owned by the new user
+    chown -R $HTS_USER:$HTS_GROUP $HTS_HOME &> /dev/null
+
+    echo "  ==> User '$HTS_USER' created"
+  fi
+
+cat << 'EOM'
+  ==> All configuration is maintained through the web interface:
+  ==>
+  ==> http://localhost:9981/
+  ==>
+  ==> Default login without username/password.
+EOM
+}
+
+post_remove() {
+  userdel $HTS_USER &> /dev/null
+  echo "  ==> User '$HTS_USER' removed"
+}

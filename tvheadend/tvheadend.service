@@ -1,0 +1,11 @@
+[Unit]
+Description=tvheadend
+After=tmp.mount network.target
+
+[Service]
+Type=simple
+PIDFile=/run/tvheadend.pid
+ExecStart=/usr/bin/tvheadend -C -6 -u hts -g video
+
+[Install]
+WantedBy=multi-user.target

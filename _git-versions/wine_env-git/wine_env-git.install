@@ -1,0 +1,16 @@
+post_install() {
+	echo "To activate wine-env add the following to your bourne shell's startup file:"
+	echo "    source /usr/bin/bottler.sh"
+	echo "If you're using Bash, add this to also activate autocompletion:"
+	echo "    source /usr/bin/wine_env_complete.sh"
+	echo "If you're using ZSH, add this to also activate autocompletion:"
+	echo "    source /usr/bin/wine_env_complete.zsh"
+	echo "If you're using Fish, add the following to your fish prompt function:"
+	echo "    if set -q WINEPREFIX"
+	echo "        if test -d $WINEPREFIX"
+	echo '            echo -n -s (set_color -b 722437 white) "(" (basename $WINEPREFIX) ")" (set_color normal) " '
+	echo "        end"
+	echo "    end"
+	echo "And add this to Fish's startup file:"
+	echo "    source /usr/bin/bottler.fish"
+}
