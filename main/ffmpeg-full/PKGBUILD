@@ -1,6 +1,11 @@
 # Maintainer : Daniel Bermond < yahoo-com: danielbermond >
 # Contributor: Iacopo Isimbaldi <isiachi@rhye.it>
 
+# INFO: Changed some stuff.
+
+# I do not provide this package on my website because I am not
+# sure if I would be allowed to do that (probably not).
+
 pkgname=ffmpeg-full
 _srcname=ffmpeg
 pkgver=3.3.2

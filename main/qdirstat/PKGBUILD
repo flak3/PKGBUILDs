@@ -1,4 +1,7 @@
 # Maintainer: phiresky <phireskyde+git@gmail.com>
+
+# INFO: Updated to 1.4 compared to 1.3 on AUR.
+
 pkgname=qdirstat
 pkgver=1.4
 pkgrel=1
