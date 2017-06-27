@@ -1,0 +1,30 @@
+# Maintainer: phiresky <phireskyde+git@gmail.com>
+pkgname=qdirstat
+pkgver=1.4
+pkgrel=1
+pkgdesc="Qt-based directory statistics (KDirStat/K4DirStat without any KDE - from the original KDirStat author)"
+arch=(i686 x86_64)
+url="https://github.com/shundhammer/qdirstat"
+license=('GPL2')
+groups=()
+depends=('qt5-base' 'hicolor-icon-theme')
+makedepends=()
+provides=("${pkgname}-git")
+conflicts=("${pkgname}-git")
+replaces=()
+backup=()
+options=()
+source=("https://github.com/shundhammer/qdirstat/archive/${pkgver}.tar.gz")
+noextract=()
+md5sums=('SKIP')
+
+build() {
+	cd "$srcdir/$pkgname-$pkgver"
+	qmake
+	make -j$(nproc)
+}
+
+package() {
+	cd "$srcdir/$pkgname-$pkgver"
+	make INSTALL_ROOT="$pkgdir/" install
+}
