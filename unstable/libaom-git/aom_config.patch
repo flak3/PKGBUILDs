@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 59d03fdd6..fdfa011a1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -417,7 +417,8 @@ set(AOM_INSTALL_INCS
+     "${AOM_ROOT}/aom/aom_frame_buffer.h"
+     "${AOM_ROOT}/aom/aom_image.h"
+     "${AOM_ROOT}/aom/aom_integer.h"
+-    "${AOM_ROOT}/aom/aom.h")
++    "${AOM_ROOT}/aom/aom.h"
++    "${AOM_CONFIG_DIR}/aom_config.h")
+ 
+ if (CONFIG_AV1_DECODER)
+   set(AOM_INSTALL_BINS ${AOM_INSTALL_BINS} aomdec)

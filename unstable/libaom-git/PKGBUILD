@@ -1,0 +1,52 @@
+# Maintainer: DetMittens
+pkgname=libaom-git
+_gitname=aom
+pkgver=r21233.784596d5f1
+pkgrel=1
+pkgdesc="Alliance for Open Media codec library with encoders and decoders for AV1"
+arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
+url="http://aomedia.org"
+license=('custom:BSD-2-Clause' 'custom:AOM-Patent-1.0')
+depends=('gcc-libs')
+makedepends=('cmake ''yasm' 'git' 'doxygen' 'perl')
+provides=('libaom.so')
+source=('gitsrc::git+https://aomedia.googlesource.com/aom'
+        'aom_config.patch')
+sha512sums=(SKIP
+            '4c9aa88e98707222d2fb9f0ebf970650862068094426e4e09db53f75e9b68d1cf0264f4459c60574738807cda4be75dbdb2c0fb3619f27a34943252aafdc91f4')
+
+pkgver() {
+  cd "${srcdir}"/gitsrc
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "${srcdir}"/gitsrc
+
+  patch -p1 -i "${srcdir}/aom_config.patch"
+}
+
+build() {
+  mkdir -p "${srcdir}"/"${_gitname}"-build
+  cd "${srcdir}"/"${_gitname}"-build
+
+  cmake \
+    -D CMAKE_INSTALL_PREFIX:PATH=/usr \
+    -D BUILD_SHARED_LIBS=1 \
+    -D CONFIG_SHARED=1 \
+    -D CONFIG_STATIC=0 \
+    -D CONFIG_PIC=1 \
+    "${srcdir}"/gitsrc
+
+  make
+}
+
+package() {
+  cd "${srcdir}"/"${_gitname}"-build
+  make DESTDIR="${pkgdir}/" install
+  install -dm 755 "${pkgdir}"/usr/share/docs/"${pkgname}"/html "${pkgdir}"/usr/share/docs/"${pkgname}"/latex
+  install -Dm 644 "${srcdir}"/"${_gitname}"-build/docs/html/* "${pkgdir}"/usr/share/docs/"${pkgname}"/html
+  install -Dm 644 "${srcdir}"/"${_gitname}"-build/docs/latex/* "${pkgdir}"/usr/share/docs/"${pkgname}"/latex
+  install -Dm 644 "${srcdir}"/gitsrc/LICENSE -t "${pkgdir}"/usr/share/licenses/"${pkgname}"/
+  install -Dm 644 "${srcdir}"/gitsrc/PATENTS -t "${pkgdir}"/usr/share/licenses/"${pkgname}"/
+}
