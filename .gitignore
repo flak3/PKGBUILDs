@@ -11,5 +11,8 @@
 
 pkg/
 src/
+gitsrc/
 
 .SRCINFO
+
+.directory
