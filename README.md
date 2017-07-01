@@ -21,6 +21,20 @@ SigLevel = Required TrustedOnly
 Server = https://repo.n1klas.net/arch/unstable/$arch
 ```
 
+Before you install any packages, add my public key to your keyring.
+First, initialize the pacman keyring:
+
+```bash
+pacman-key --init
+```
+
+Then, import my public key, verify the fingerprint and locally sign it:
+
+```bash
+pacman-key -r 5C7B49424E175733
+pacman-key --lsign-key 5C7B49424E175733
+```
+
 Finally, refresh your pacman cache:
 
 ```bash
