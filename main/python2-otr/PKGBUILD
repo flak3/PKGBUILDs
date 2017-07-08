@@ -1,0 +1,26 @@
+# Maintainer: Mike Nagie <echo 'cHJvbWlrZTE5ODdAZ21haWwuY29tCg==' | base64 -d>
+
+# INFO: Used to be a -git package, now builds v1.2.0
+
+pkgname=python2-otr
+pkgver=1.2.0
+pkgrel=1
+pkgdesc="Off-The-Record Messaging protocol implementation for Python"
+arch=(any)
+url="https://github.com/AGProjects/python-otr"
+license=('LGPL')
+depends=('python2')
+makedepends=('git')
+source=("https://github.com/AGProjects/python-otr/archive/release-${pkgver}.tar.gz")
+
+sha512sums=('45326b3cb1f02eca0cc96d545c862acc87c25e0f1d3f0146bae51953fccba485b264b89143b4d00b9f8f9133c2811dee6dc255c7ebb2375ed70bd49a2feb1f71')
+
+build() {
+    cd "$srcdir/python-otr-release-$pkgver"
+    python2 setup.py build
+}
+
+package() {
+    cd "$srcdir/python-otr-release-$pkgver"
+    python2 setup.py install --prefix=/usr --root="${pkgdir}"
+}
