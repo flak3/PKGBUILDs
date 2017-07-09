@@ -47,9 +47,9 @@ build() {
 package() {
   cd "${srcdir}"/"${_gitname}"-build
   make DESTDIR="${pkgdir}/" install
-  install -dm 755 "${pkgdir}"/usr/share/docs/"${pkgname}"/html "${pkgdir}"/usr/share/docs/"${pkgname}"/latex
-  install -Dm 644 "${srcdir}"/"${_gitname}"-build/docs/html/* "${pkgdir}"/usr/share/docs/"${pkgname}"/html
-  install -Dm 644 "${srcdir}"/"${_gitname}"-build/docs/latex/* "${pkgdir}"/usr/share/docs/"${pkgname}"/latex
+  install -dm 755 "${pkgdir}"/usr/share/doc/"${pkgname}"/html "${pkgdir}"/usr/share/doc/"${pkgname}"/latex
+  install -Dm 644 "${srcdir}"/"${_gitname}"-build/docs/html/* "${pkgdir}"/usr/share/doc/"${pkgname}"/html
+  install -Dm 644 "${srcdir}"/"${_gitname}"-build/docs/latex/* "${pkgdir}"/usr/share/doc/"${pkgname}"/latex
   install -Dm 644 "${srcdir}"/gitsrc/LICENSE -t "${pkgdir}"/usr/share/licenses/"${pkgname}"/
   install -Dm 644 "${srcdir}"/gitsrc/PATENTS -t "${pkgdir}"/usr/share/licenses/"${pkgname}"/
 }
