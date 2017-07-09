@@ -1,4 +1,7 @@
 # Maintainer: DetMittens
+
+# INFO: Now using cmake
+
 pkgname=libaom-git
 _gitname=aom
 pkgver=r21233.784596d5f1
