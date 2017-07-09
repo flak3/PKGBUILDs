@@ -12,7 +12,7 @@ arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.xiph.org/daala/"
 license=('BSD')
 depends=('glibc')
-makedepends=('git' 'check' 'sdl2' 'wxgtk2' 'webkitgtk2' 'libogg' 'libpng' 'libjpeg-turbo')
+makedepends=('git' 'check' 'libogg' 'libpng' 'libjpeg-turbo' 'doxygen')
 checkdepends=('check')
 provides=('libdaala' $_gitname)
 conflicts=('libdaala' $_gitname)
@@ -31,9 +31,9 @@ build() {
   cd "${srcdir}"/"${_gitname}"-build
 
   "${srcdir}"/gitsrc/autogen.sh
-  "${srcdir}"/gitsrc/configure --prefix=/usr --enable-analyzer
+  "${srcdir}"/gitsrc/configure --prefix=/usr --disable-player --disable-static
   make
-  make tools
+  make docs
 }
 
 check() {
@@ -45,7 +45,6 @@ package() {
   cd "${srcdir}"/"${_gitname}"-build
 
   make DESTDIR="$pkgdir/" install
-  #make DESTDIR="$pkgdir/" install-docs
-  #make DESTDIR="$pkgdir/" install-exec
+  make DESTDIR="$pkgdir/" install-docs
   install -Dm644 "${srcdir}"/gitsrc/COPYING "$pkgdir/usr/share/licenses/daala-git/COPYING"
 }
