@@ -1,0 +1,24 @@
+# Maintainer: Niklas <dev@n1klas.net>
+
+pkgname=libmicrodns
+pkgver=0.0.7
+pkgrel=1
+pkgdesc="Minimal mDNS resolver library"
+arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
+url="https://github.com/videolabs/libmicrodns"
+license=('LGPL2.1')
+depends=('glibc')
+source=("https://github.com/videolabs/libmicrodns/archive/${pkgver}.tar.gz")
+sha512sums=('3f23516f77a39bbd8193ec78c36d87b8381fa678a161abac1764d50398f68648e8585deab10d194bb9fc1964ba5db4f9bb9d429e304500d412dd219494e84328')
+
+build() {
+	cd "$pkgname-$pkgver"
+    ./bootstrap
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "$pkgname-$pkgver"
+	make DESTDIR="$pkgdir/" install
+}
