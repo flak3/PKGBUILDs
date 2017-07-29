@@ -1,0 +1,39 @@
+# $Id: PKGBUILD 294878 2017-04-27 04:36:19Z foutrelis $
+# Maintainer: Pierre Schmitz <pierre@archlinux.de>
+
+# NOTE: added patch from the Arch Linux ARM project to prevent makechrootpkg
+#       from ignoring custom MAKEFLAGS
+
+pkgname=devtools-n1klas
+_realname=devtools
+pkgver=20170320
+pkgrel=2
+pkgdesc='Tools for Arch Linux package maintainers'
+arch=('any')
+license=('GPL')
+url='http://projects.archlinux.org/devtools.git/'
+conflicts=('devtools' 'devtools-alarm')
+provides=('devtools')
+depends=('namcap' 'openssh' 'subversion' 'rsync' 'arch-install-scripts')
+source=("https://sources.archlinux.org/other/$_realname/$_realname-$pkgver.tar.gz"
+        '0001-makechrootpkg-Delete-chroot-subvols-recursively-when.patch'
+        '0007-makechrootpkg-don-t-delete-MAKEFLAGS-and-PACKAGER.patch')
+md5sums=('e401f4e3d1074b80060390b9812766f1'
+         '678ec14b148dbe88cbac92a1cefa57d5'
+         '95cd4a5c70892c6f12424655884f43fb')
+
+prepare() {
+	cd "${_realname}-${pkgver}"
+	patch -Np1 -i ../0001-makechrootpkg-Delete-chroot-subvols-recursively-when.patch
+	patch -p1 -i ../0007-makechrootpkg-don-t-delete-MAKEFLAGS-and-PACKAGER.patch
+}
+
+build() {
+	cd "${_realname}-${pkgver}"
+	make PREFIX=/usr
+}
+
+package() {
+	cd "${_realname}-${pkgver}"
+	make PREFIX=/usr DESTDIR=${pkgdir} install
+}
