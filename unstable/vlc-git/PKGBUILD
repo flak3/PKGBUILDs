@@ -24,15 +24,16 @@ depends=('a52dec' 'daala-git' 'faad2' 'ffmpeg' 'libaom-git' 'libdca' 'libdvbpsi'
          'libxinerama' 'libxpm' 'lua' 'sdl_image' 'mesa' 'wayland' 'wayland-protocols'
          'taglib' 'xcb-util-keysyms' 'zvbi' 'libsecret' 'libarchive' 'qt5-base' 'libglvnd'
          'hicolor-icon-theme' 'qt5-x11extras')
-makedepends=('aalib' 'flac' 'git'
-             'libavc1394' 'libbluray' 'libcaca' 'libdc1394' 'libdvdcss'
-             'libgme' 'libgoom2' 'libmtp' 'libnotify' 'librsvg'
-             'libssh2' 'lirc' 'live-media'  'opus'
-             'portaudio' 'projectm' 'twolame' 'vcdimager' 'xosd' 'smbclient')
+makedepends=('aalib' 'avahi' 'flac' 'git' 'libavc1394'
+             'libbluray' 'libcaca' 'libdc1394' 'libdvdcss' 'libgme'
+             'libgoom2' 'libmicrodns' 'libmtp' 'libnotify' 'librsvg'
+             'libssh2' 'lirc' 'live-media'  'opus' 'portaudio'
+             'projectm' 'protobuf' 'twolame' 'vcdimager' 'xosd' 'smbclient')
 optdepends=('aalib: for ASCII art plugin'
             'avahi: for service discovery using bonjour protocol'
             'flac: for Free Lossless Audio Codec plugin'
             'kdelibs: KDE Solid hardware integration'
+            'kwallet: for password storage'
             'libavc1394: for devices using the 1394ta AV/C'
             'libbluray: for Blu-Ray support'
             'libcaca: for colored ASCII art video output'
@@ -41,6 +42,7 @@ optdepends=('aalib: for ASCII art plugin'
             'libdvdcss: for decoding encrypted DVDs'
             'libgme: for libgme plugin'
             'libgoom2: for libgoom plugin'
+            'libmicrodns: for Chromecast support'
             'libmtp: for MTP devices support'
             'libnotify: for notification plugin'
             'librsvg: for SVG plugin'
@@ -53,6 +55,7 @@ optdepends=('aalib: for ASCII art plugin'
             'opus: for opus support'
             'portaudio: for portaudio support'
             'projectm: for ProjectM visualisation plugin'
+            'protobuf: for Chromecast support'
             'smbclient: for SMB access plugin'
             'ttf-dejavu: for subtitle font'
             'ttf-freefont: for subtitle font'
@@ -88,8 +91,16 @@ build() {
   CFLAGS+=" -I/usr/include/samba-4.0" CPPFLAGS+=" -I/usr/include/samba-4.0" \
   ./configure --disable-rpath \
               --enable-aa \
+              --enable-aom \
+              --enable-archive \
+              --enable-avahi \
+              --enable-bluray \
+              --enable-chromecast \
+              --enable-daala \
               --enable-faad \
+              --enable-fdkaac \
               --enable-lirc \
+              --enable-microdns \
               --enable-ncurses \
               --enable-nls \
               --enable-opus \
@@ -97,11 +108,6 @@ build() {
               --enable-sftp \
               --enable-upnp \
               --enable-vcdx \
-              --enable-fdkaac \
-              --enable-archive \
-              --enable-bluray \
-              --enable-aom \
-              --enable-daala \
               --prefix=/usr \
               --sysconfdir=/etc \
               LUAC=/usr/bin/luac  LUA_LIBS="`pkg-config --libs lua`" \
