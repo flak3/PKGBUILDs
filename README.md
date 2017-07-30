@@ -10,15 +10,9 @@ also compile these for i686 and ARM architectures at some point.
 To install packages from my repository, add this to your pacman.conf:
 
 ```INI
-# main repository
 [n1klas]
 SigLevel = Required TrustedOnly
 Server = https://repo.n1klas.net/arch/main/$arch
-
-# unstable repository (for -git packages)
-[n1klas-unstable]
-SigLevel = Required TrustedOnly
-Server = https://repo.n1klas.net/arch/unstable/$arch
 ```
 
 Before you install any packages, add my public key to your keyring.
@@ -28,7 +22,7 @@ First, initialize the pacman keyring:
 pacman-key --init
 ```
 
-Then, import my public key, verify the fingerprint and locally sign it:
+Then, import my public key and locally sign it:
 
 ```bash
 pacman-key -r 5C7B49424E175733
