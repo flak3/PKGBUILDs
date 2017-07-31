@@ -1,0 +1,27 @@
+#Maintainer: M0Rf30
+
+pkgname=gyp-git
+pkgver=2115.4801a533
+pkgrel=2
+pkgdesc="GYP can Generate Your Projects."
+url="http://code.google.com/p/gyp/"
+arch=('any')
+makedepends=('git')
+depends=('python2-setuptools')
+license=('BSD')
+source=("gitsrc::git+https://chromium.googlesource.com/external/gyp")
+md5sums=('SKIP')
+conflicts=('gyp-svn')
+replaces=('gyp-svn')
+
+pkgver() {
+  cd gitsrc
+  echo $(git rev-list --count master).$(git rev-parse --short master)
+}
+
+package() {
+  cd gitsrc
+  python2 setup.py install --root=$pkgdir --optimize=1
+
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
