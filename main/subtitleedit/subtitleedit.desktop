@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Subtitle Edit
+Comment=A subtitle editor
+Exec=/usr/bin/subtitleedit %F
+Icon=subtitleedit
+Terminal=false
+Type=Application
+Categories=Video;AudioVideo;AudioVideoEditing;
+MimeType=application/x-subrip;application/ttml+xml;application/x-subviewer;application/x-microdvd;application/x-ssa;text/vtt

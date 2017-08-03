@@ -1,0 +1,46 @@
+# Maintainer: Niklas <dev@n1klas.net>
+
+# NOTE: Made multiple adjustments:
+#       1. Extract all sizes from the provided ICO file instead of just one
+#       2. Icons now sit in the proper hicolor folders
+#       3. Added some supported MIME types to the desktop file
+
+pkgname=subtitleedit
+pkgver=3.5.3
+pkgrel=1
+pkgdesc="A subtitle editor"
+arch=('any')
+url="http://www.nikse.dk/subtitleedit/"
+license=('GPL3')
+depends=('mono' 'hicolor-icon-theme')
+optdepends=('vlc: Video support')
+makedepends=('unzip' 'imagemagick')
+_pkgver_nz="${pkgver%.0}"
+source=(
+    "https://github.com/SubtitleEdit/subtitleedit/releases/download/$pkgver/SE${_pkgver_nz//./}.zip"
+    "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/$pkgver/src/Icons/SE.ico"
+    "subtitleedit"
+    "subtitleedit.desktop"
+)
+sha256sums=(
+    '7cf36c3bb413afb7c29e61d9ff0fb82861a397e8a89ece1686fe60a7f56fe594'
+    'a2d211e7ce3597b25db9f921590169c89d0b47dad48669dfffb6795a7ba534cd'
+    'f1e7b1ef8116afaaac61a6ddd871fb6ec349ab729d068f1c3195d0fbabafc2bc'
+    'f4ccfe5f58a579bd347bf5c2be9c034146eb587e9f926753c83dccb172b97424'
+)
+noextract=("SE${_pkgver_nz//./}.zip")
+
+package() {
+    install -d "$pkgdir/usr/share/subtitleedit"
+    unzip "$srcdir/SE${_pkgver_nz//./}.zip" -d "$pkgdir/usr/share/subtitleedit"
+    touch "$pkgdir/usr/share/subtitleedit/.PACKAGE-MANAGER"
+
+    install -Dm755 "$srcdir/subtitleedit" "$pkgdir/usr/bin/subtitleedit"
+    install -Dm644 "$srcdir/subtitleedit.desktop" "$pkgdir/usr/share/applications/subtitleedit.desktop"
+
+    mkdir "$srcdir/icons"
+    convert $srcdir/SE.ico[6,7,8] "$srcdir/icons/SE.png"
+    install -Dm644 "$srcdir/icons/SE-6.png" "$pkgdir/usr/share/icons/hicolor/48x48/apps/subtitleedit.png"
+    install -Dm644 "$srcdir/icons/SE-7.png" "$pkgdir/usr/share/icons/hicolor/32x32/apps/subtitleedit.png"
+    install -Dm644 "$srcdir/icons/SE-8.png" "$pkgdir/usr/share/icons/hicolor/16x16/apps/subtitleedit.png"
+}
