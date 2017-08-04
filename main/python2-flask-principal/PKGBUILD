@@ -1,0 +1,20 @@
+# Maintainer: Fabrizio Lungo <aur@flungo.me>
+# Contributor: warddr <aur@warddr.eu>
+
+pkgname=python2-flask-principal
+pkgver=0.4.0
+pkgrel=2
+pkgdesc="Identity management for flask."
+arch=(any)
+url="http://pypi.python.org/pypi/Flask-Principal"
+license=("MIT")
+depends=("python2" "python2-flask")
+makedepends=("python2-setuptools")
+source=("https://github.com/mattupstate/flask-principal/archive/$pkgver.tar.gz")
+sha256sums=("ed8c58943460d7d54c29463e2fe98ae4969d3818c0f59b36e9b2649128db96c9")
+
+package_python2-flask-principal() {
+    cd $srcdir/flask-principal-$pkgver
+    python2 setup.py install --root="$pkgdir" --prefix=/usr
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
