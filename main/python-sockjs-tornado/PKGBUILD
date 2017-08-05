@@ -1,0 +1,35 @@
+# Maintainer: Niklas <dev@n1klas.net>
+# Contributor: David McInnis <davidm@eagles.ewu.edu>
+
+pkgbase='python-sockjs-tornado'
+pkgname=('python-sockjs-tornado' 'python2-sockjs-tornado')
+_name='sockjs-tornado'
+pkgver='1.0.3'
+pkgrel=2
+pkgdesc="SockJS python server implementation on top of Tornado framework"
+url="http://github.com/mrjoes/sockjs-tornado/"
+license=('MIT')
+arch=('any')
+makedepends=('python-setuptools' 'python2-setuptools')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha256sums=('6d726e61bd1d884bd1c1788727fce1b9f24fd69062dda0daf61a476b01718e99')
+
+prepare() {
+  cp -a $_name-$pkgver{,-python2}
+}
+
+package_python-sockjs-tornado() {
+  depends=('python' 'python-tornado')
+
+  cd "${srcdir}/${_name}-${pkgver}"
+  python setup.py install --root="$pkgdir/" --optimize=1
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/python-sockjs-tornado/LICENSE.txt"
+}
+
+package_python2-sockjs-tornado() {
+  depends=('python2' 'python2-tornado')
+
+  cd "${srcdir}/${_name}-${pkgver}-python2"
+  python2 setup.py install --root="$pkgdir/" --optimize=1
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/python2-sockjs-tornado/LICENSE.txt"
+}
