@@ -1,0 +1,38 @@
+# Maintainer: Niklas <dev@n1klas.net>
+# Contributor: Fabrizio Lungo <aur@flungo.me>
+# Contributor: warddr <aur@warddr.eu>
+
+# NOTE: Now compiles for python2 and python3, installs LICENSE file
+
+pkgbase=python-flask-principal
+pkgname=('python-flask-principal' 'python2-flask-principal')
+_name=flask-principal
+pkgver=0.4.0
+pkgrel=3
+pkgdesc="Identity management for flask."
+arch=(any)
+url="http://pypi.python.org/pypi/Flask-Principal"
+license=('MIT')
+makedepends=('python-setuptools' 'python2-setuptools')
+source=("https://github.com/mattupstate/$_name/archive/$pkgver.tar.gz")
+sha256sums=('ed8c58943460d7d54c29463e2fe98ae4969d3818c0f59b36e9b2649128db96c9')
+
+prepare() {
+  cp -a $_name-$pkgver{,-python2}
+}
+
+package_python-flask-principal() {
+  depends=('python' 'python-flask')
+
+  cd "${srcdir}/${_name}-${pkgver}"
+  python setup.py install --root="$pkgdir/" --optimize=1
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/python-flask-principal/LICENSE"
+}
+
+package_python2-flask-principal() {
+  depends=('python2' 'python2-flask')
+
+  cd "${srcdir}/${_name}-${pkgver}-python2"
+  python2 setup.py install --root="$pkgdir/" --optimize=1
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/python2-flask-principal/LICENSE"
+}
