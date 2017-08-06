@@ -1,0 +1,33 @@
+# Maintainer: Niklas <dev@n1klas.net>
+# Contributor: Jake <ja.ke@posteo.de>
+
+pkgbase=python-awesome-slugify
+pkgname=('python-awesome-slugify' 'python2-awesome-slugify')
+_name=awesome-slugify
+pkgver=1.6.5
+pkgrel=1
+pkgdesc="Python flexible slugify function"
+arch=(any)
+url="https://github.com/dimka665/awesome-slugify"
+license=('GPL3')
+makedepends=('python-setuptools' 'python2-setuptools')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha256sums=('bbdec3fa2187917473a2efad092b57f7125a55f841a7cf6a1773178d32ccfd71')
+
+prepare() {
+  cp -a $_name-$pkgver{,-python2}
+}
+
+package_python-awesome-slugify() {
+  depends=('python-unidecode>=0.04.14' 'python-regex')
+  cd $srcdir/$_name-$pkgver
+
+  python setup.py install --root=$pkgdir --optimize=1
+}
+
+package_python2-awesome-slugify() {
+  depends=('python2-unidecode>=0.04.14' 'python2-regex')
+  cd $srcdir/$_name-$pkgver-python2
+
+  python2 setup.py install --root=$pkgdir --optimize=1
+}
