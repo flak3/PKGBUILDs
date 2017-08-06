@@ -1,0 +1,49 @@
+# Maintainer: Jean Lucas <jean at 4ray dot co>
+# Contributor: Antonio Rojas <arojas at archlinux dot org>
+
+pkgbase=python-webassets
+pkgname=('python-webassets' 'python2-webassets')
+_name=webassets
+pkgver=0.12.1
+pkgrel=1
+pkgdesc="Asset management application for Python web development"
+arch=('any')
+url="http://github.com/miracle2k/webassets"
+license=('BSD')
+makedepends=('python-setuptools' 'python2-setuptools')
+source=("https://github.com/miracle2k/webassets/archive/$pkgver.tar.gz")
+sha256sums=('34d94191b9c69df16fb6504d513a57851870e545bec7ad239e93e66bb9767682')
+
+prepare() {
+  cp -a $_name-$pkgver{,-python2}
+}
+
+package_python-webassets() {
+  depends=('python')
+  optdepends=('python-pillow: support for image manipulation'
+              'python-nose: required to run tests'
+              'python-mock: required to run tests')
+
+  cd $srcdir/$_name-$pkgver
+  python setup.py install --root=$pkgdir --optimize=1
+
+  mkdir -p $pkgdir/usr/share/licenses/$pkgname
+  install -Dm 0644 LICENSE $pkgdir/usr/share/licenses/$pkgname
+}
+
+package_python2-webassets() {
+  depends=('python2')
+  optdepends=('python2-pillow: support for image manipulation'
+              'python2-nose: required to run tests'
+              'python2-mock: required to run tests')
+
+  cd $srcdir/$_name-$pkgver-python2
+  python2 setup.py install --root=$pkgdir --optimize=1
+
+  sed -e 's|#!/usr/bin/env python|#!/usr/bin/env python2|' -i $pkgdir/usr/lib/python2.7/site-packages/webassets/filter/rjsmin/rjsmin.py
+
+  mkdir -p $pkgdir/usr/share/licenses/$pkgname
+  install -Dm 0644 LICENSE $pkgdir/usr/share/licenses/$pkgname
+
+  mv $pkgdir/usr/bin/webassets{,2}
+}
