@@ -1,0 +1,37 @@
+# Maintainer: Niklas <dev@n1klas.net>
+# Contributor: Adam Goldsmith <adam@adamgoldsmith.name>
+# Contributor: Cedric Girard <girard.cedric@gmail.com>
+# Contributor: Moritz Lipp <mlq@pwmt.org>
+
+pkgbase=python-flask-assets
+pkgname=('python-flask-assets' 'python2-flask-assets')
+_name=Flask-Assets
+pkgver=0.12
+pkgrel=1
+pkgdesc="Asset management for Flask, to compress and merge CSS and Javascript files"
+arch=(any)
+url="http://flask-assets.readthedocs.org"
+license=('BSD')
+makedepends=('python-setuptools' 'python2-setuptools')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha256sums=('6031527b89fb3509d1581d932affa5a79dd348cfffb58d0aef99a43461d47847')
+
+prepare() {
+  cp -a $_name-$pkgver{,-python2}
+}
+
+package_python-flask-assets() {
+  depends=('python-flask' 'python-webassets')
+
+  cd "$srcdir/$_name-$pkgver"
+  python setup.py install --root="$pkgdir/" --optimize=1
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/python-flask-assets/LICENSE"
+}
+
+package_python2-flask-assets() {
+  depends=('python2-flask' 'python2-webassets')
+
+  cd "$srcdir/$_name-$pkgver-python2"
+  python2 setup.py install --root="$pkgdir/" --optimize=1
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/python2-flask-assets/LICENSE"
+}
