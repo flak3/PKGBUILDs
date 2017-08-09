@@ -4,7 +4,7 @@
 
 pkgname=crosstool-ng
 pkgver=1.23.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Versatile (cross-)toolchain generator'
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url='http://crosstool-ng.org/'
