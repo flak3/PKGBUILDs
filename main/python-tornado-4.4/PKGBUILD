@@ -5,7 +5,7 @@
 pkgbase=python-tornado-4.4
 pkgname=('python-tornado-4.4' 'python2-tornado-4.4')
 pkgver=4.4.3
-pkgrel=1
+pkgrel=2
 pkgdesc='open source version of the scalable, non-blocking web server and tools'
 arch=('i686' 'x86_64')
 url='http://www.tornadoweb.org/'
@@ -75,6 +75,8 @@ package_python-tornado-4.4() {
   optdepends=('python-pycurl: for tornado.curl_httpclient'
               'python-twisted: for tornado.platform.twisted')
               # 'python-pycares: an alternative non-blocking DNS resolver'
+  conflicts=('python-tornado')
+  provides=('python-tornado')
 
   cd tornado-$pkgver
   python setup.py install --root="$pkgdir" --optimize=1
@@ -87,6 +89,8 @@ package_python2-tornado-4.4() {
               'python2-pycurl: for tornado.curl_httpclient'
               'python2-twisted: for tornado.platform.twisted')
               # 'python2-pycares: an alternative non-blocking DNS resolver'
+  conflicts=('python2-tornado')
+  provides=('python2-tornado')
 
   cd tornado-$pkgver-py2
   python2 setup.py install --root="$pkgdir" --optimize=1
