@@ -1,0 +1,12 @@
+[Unit]
+Description=Octoprint 3D Printing Web Server
+After=network.target
+
+[Service]
+User=octoprint
+Group=octoprint
+Type=simple
+ExecStart=/usr/bin/octoprint
+
+[Install]
+WantedBy=multi-user.target
