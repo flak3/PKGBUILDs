@@ -1,5 +1,5 @@
 [Unit]
-Description=Octoprint 3D Printing Web Server
+Description=Responsive web interface for controlling a 3D printer
 After=network.target
 
 [Service]
