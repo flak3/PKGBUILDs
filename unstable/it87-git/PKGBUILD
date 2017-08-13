@@ -1,0 +1,58 @@
+# Maintainer: Niklas <dev@n1klas.net>
+# Contributor: Daniel Hillenbrand <codeworkx at bbqlinux dot org>
+
+pkgbase=it87-git
+_pkgbase=it87
+pkgname=(it87-git it87-dkms-git)
+pkgver=r88.gc01952b
+pkgrel=2
+_extramodules=extramodules-4.12-ARCH
+pkgdesc="Driver for ITE LPC chips"
+arch=('x86_64' 'i686')
+url="https://github.com/groeck/it87"
+license=('GPL')
+makedepends=('git' 'linux' 'linux-headers>=4.12' 'linux-headers<4.13')
+provides=('it87')
+conflicts=('it87')
+source=("gitsrc::git+https://github.com/groeck/it87.git"
+        'dkms.conf.in')
+sha512sums=('SKIP'
+            '3dedb8b6892d8110a28ca44be6c7dc973b11906028cfb231eaa8ac34c2ace920684ba142df21a89bb591505d9e2bfd97b64cc310ae8a49eda612705bbe2b88bc')
+
+pkgver() {
+    cd "$srcdir/gitsrc"
+    printf "r%s.g%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd "$srcdir/gitsrc"
+
+    _kernver="$(cat /usr/lib/modules/$_extramodules/version)"
+    make KERNEL_BUILD=/usr/lib/modules/"$_kernver/build" \
+      KERNEL_MODULES=/usr/lib/modules/"$_kernver" modules
+}
+
+package_it87-git() {
+    depends=('linux>=4.12' 'linux<4.13')
+    install=$_pkgbase.install
+
+    install -Dm644 "$srcdir/gitsrc/$_pkgbase.ko" \
+    "$pkgdir/usr/lib/modules/$_extramodules/$_pkgbase.ko"
+
+    gzip -9 "$pkgdir/usr/lib/modules/$_extramodules/"*.ko
+}
+
+package_it87-dkms-git() {
+    depends=('dkms')
+    conflicts+=('it87-dkms' 'it87-git')
+
+    cd "$srcdir/gitsrc"
+
+    install -dm755 $pkgdir/usr/src/$_pkgbase-$pkgver
+    cp -a Makefile README* *.h *.c $pkgdir/usr/src/$_pkgbase-$pkgver/
+
+    sed -e "s/@PACKAGE_VERSION@/$pkgver/" \
+        -e "s/@PACKAGE_NAME@/$_pkgbase/" \
+        $srcdir/dkms.conf.in > \
+        $pkgdir/usr/src/$_pkgbase-$pkgver/dkms.conf
+}
