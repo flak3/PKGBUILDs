@@ -1,0 +1,36 @@
+# Maintainer: Daniel Albers <daniel@lbe.rs>
+# Contributor: dhead666 <myfoolishgames@gmail.com>
+# https://github.com/AlD/archlinux
+
+pkgname=kodi-addon-pvr-hts
+_gitname=pvr.hts
+pkgver=3.4.24
+_srcver=3.4.24-Krypton
+pkgrel=1
+pkgdesc='Tvheadend HTSP PVR client addon for Kodi'
+arch=('i686' 'x86_64' 'armv6h' 'armv7h')
+url="https://github.com/kodi-pvr/pvr.hts"
+license=('GPL')
+groups=('kodi-addons')
+makedepends=('cmake' 'kodi-platform' 'git' 'kodi-dev')
+depends=('kodi' 'p8-platform')
+source=("https://github.com/kodi-pvr/pvr.hts/archive/${_srcver}.tar.gz")
+sha512sums=('66d0c0f090a1c22f748a2cf70a9790dc1fa74c05bbb3ad478cce92b2a116c8f2c25dbc72a9d6f2269a19da94c0ea9f7123bfffeebb9d2d6f29dd17411410fe16')
+
+build() {
+  msg "Starting make..."
+
+  cd "${srcdir}/${_gitname}-${_srcver}"
+  mkdir -p build && pushd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    ..
+  make
+  popd
+}
+
+package() {
+  cd "${srcdir}/${_gitname}-${_srcver}/build"
+  make DESTDIR="${pkgdir}" install
+}
