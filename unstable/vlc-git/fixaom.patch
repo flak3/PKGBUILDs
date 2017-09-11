@@ -1,0 +1,13 @@
+diff --git a/modules/codec/aom.c b/modules/codec/aom.c
+index 64a378816c..1b392bb283 100644
+--- a/modules/codec/aom.c
++++ b/modules/codec/aom.c
+@@ -208,7 +208,7 @@ static int Decode(decoder_t *dec, block_t *block)
+         case AOM_CS_SMPTE_240:
+             v->space = COLOR_SPACE_BT601;
+             break;
+-        case AOM_CS_BT_2020:
++        case AOM_CS_BT_2020_CL:
+             v->space = COLOR_SPACE_BT2020;
+             break;
+         default:

@@ -12,7 +12,7 @@
 
 _name=vlc
 pkgname=vlc-git
-pkgver=3.0.0.r13258.g4a066d0415
+pkgver=3.0.0.r14452.g721a626e45
 pkgrel=1
 pkgdesc="A multi-platform MPEG, VCD/DVD, and DivX player (GIT Version)"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -67,10 +67,13 @@ options=('!emptydirs')
 install="${_name}.install"
 source=('gitsrc::git://git.videolan.org/vlc.git'
         'lua53_compat.patch'
-        'update-vlc-plugin-cache.hook')
+        'update-vlc-plugin-cache.hook'
+        'fixaom.patch')
 sha512sums=('SKIP'
             '33cda373aa1fb3ee19a78748e2687f2b93c8662c9fda62ecd122a2e649df8edaceb54dda3991bc38c80737945a143a9e65baa2743a483bb737bb94cd590dc25f'
-            '80357bae69e32b353d3784932d854e294906798e14faffb87c3383c3b6f6bdc57cbabb9c6e3f3c1adf0f8ddbb24153e72104c963cf1934970c2983c96daef9df')
+            '80357bae69e32b353d3784932d854e294906798e14faffb87c3383c3b6f6bdc57cbabb9c6e3f3c1adf0f8ddbb24153e72104c963cf1934970c2983c96daef9df'
+            '49c7807e5130bf409aa3a1669c241088a74498190e3343adf388ec4f475d4fdc0d3e29e14326de36a62ff03fe1c8dba419e350274fe936cf3f211aa3d5f209b1')
+
 pkgver() {
   cd "${srcdir}"/gitsrc
   printf "%s.r%s.g%s\n" "$(grep 'AC_INIT' configure.ac | sed 's/[^0-9\.]*//g')" "$(git describe --tags --long | cut -d '-' -f 3)" "$(git rev-parse --short HEAD)"
@@ -81,6 +84,7 @@ prepare() {
 
   sed -i -e 's:truetype/ttf-dejavu:TTF:g' modules/visualization/projectm.cpp
   patch -p1 -i "${srcdir}/lua53_compat.patch"
+  patch -p1 -i "${srcdir}/fixaom.patch"
 }
 
 build() {
@@ -108,6 +112,7 @@ build() {
               --enable-sftp \
               --enable-upnp \
               --enable-vcdx \
+              --enable-wayland \
               --prefix=/usr \
               --sysconfdir=/etc \
               LUAC=/usr/bin/luac  LUA_LIBS="`pkg-config --libs lua`" \
