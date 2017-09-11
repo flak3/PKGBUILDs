@@ -18,7 +18,7 @@
 pkgbase=kodi-git
 pkgname=('kodi-git' 'kodi-eventclients-git' 'kodi-tools-texturepacker-git' 'kodi-dev-git')
 _gitname='xbmc'
-pkgver=18.0.r3543.gb6318a5472
+pkgver=18.0.r3883.ee7f71f847
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kodi.tv"
@@ -41,19 +41,19 @@ sha512sums=('SKIP'
             '39c84be54caa0e4a9b57ec92a903d688703e3fc2cf6ea566efad9f2509eb286d981837e4968af1c28ffb2f5fe7a872fa546535c787a56dbdb335991514fb1a06')
 
 pkgver() {
-  cd "$srcdir/gitsrc"
-  printf "%s.%s.r%s.g%s\n" "$(grep 'VERSION_MAJOR' version.txt | sed 's/[^0-9\.]*//g')" "$(grep 'VERSION_MINOR' version.txt | sed 's/[^0-9\.]*//g')" "$(git describe --tags --long | cut -d '-' -f 3)" "$(git rev-parse --short HEAD)"
+  cd "${srcdir}/gitsrc"
+  printf "%s.%s.r%s.%s\n" "$(grep 'VERSION_MAJOR' version.txt | sed 's/[^0-9\.]*//g')" "$(grep 'VERSION_MINOR' version.txt | sed 's/[^0-9\.]*//g')" "$(git describe --tags --long | cut -d '-' -f 3)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
   [[ -d kodi-build ]] && rm -rf kodi-build
   mkdir kodi-build
-  cd gitsrc
+  cd "${srcdir}/gitsrc"
   patch -p1 -i "$srcdir/0001-include-fmt-printf.h-to-allow-the-use-of-fmt-sprintf.patch"
 }
 
 build() {
-  cd "gitsrc"
+  cd "${srcdir}/gitsrc"
   cmake -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=/usr/lib \
     -DENABLE_EVENTCLIENTS=ON \
@@ -96,7 +96,7 @@ package_kodi-git() {
     'unzip: Archives support'
     'upower: Display battery level'
   )
-  provides=('xbmc' 'kodi')
+  provides=('xbmc=18.0' 'kodi=18.0')
   conflicts=('xbmc' 'kodi')
   replaces=('xbmc-svn' 'xbmc-git')
 
@@ -105,10 +105,10 @@ package_kodi-git() {
     'kodi-bin'
   )
 
-  cd "gitsrc"
+  cd "${srcdir}/gitsrc"
   # install eventclients
   for _cmp in ${_components[@]}; do
-    DESTDIR="$pkgdir" /usr/bin/cmake \
+    DESTDIR="${pkgdir}" /usr/bin/cmake \
       -DCMAKE_INSTALL_COMPONENT="$_cmp" \
       -P cmake_install.cmake
   done
@@ -116,12 +116,12 @@ package_kodi-git() {
   # Licenses
   install -dm755 "$pkgdir/usr/share/licenses/$pkgname"
   for licensef in LICENSE.GPL copying.txt; do
-    mv "$pkgdir/usr/share/doc/kodi/$licensef" \
-      "$pkgdir/usr/share/licenses/$pkgname"
+    mv "${pkgdir}/usr/share/doc/kodi/$licensef" \
+      "${pkgdir}/usr/share/licenses/$pkgname"
   done
 
   # python2 is being used
-  cd "$pkgdir"
+  cd "${pkgdir}"
   grep -lR '#!.*python' * | while read file; do sed -s 's/\(#!.*python\)/\12/g' -i "$file"; done
 }
 
@@ -131,8 +131,9 @@ package_kodi-git() {
 package_kodi-eventclients-git() {
   pkgdesc="Kodi Event Clients (master branch)"
   conflicts=('kodi-eventclients')
+  provides=('kodi-eventclients=18.0')
 
-  depends=('cwiid')
+  depends=('kodi-git' 'cwiid')
 
   _components=(
     'kodi-eventclients-common'
@@ -141,16 +142,16 @@ package_kodi-eventclients-git() {
     'kodi-eventclients-xbmc-send'
   )
 
-  cd "gitsrc"
+  cd "${srcdir}/gitsrc"
   # install eventclients
   for _cmp in ${_components[@]}; do
-    DESTDIR="$pkgdir" /usr/bin/cmake \
+    DESTDIR="${pkgdir}" /usr/bin/cmake \
       -DCMAKE_INSTALL_COMPONENT="$_cmp" \
       -P cmake_install.cmake
   done
 
   # python2 is being used
-  cd "$pkgdir"
+  cd "${pkgdir}"
   grep -lR '#!.*python' * | while read file; do sed -s 's/\(#!.*python\)/\12/g' -i "$file"; done
 }
 
@@ -160,15 +161,17 @@ package_kodi-eventclients-git() {
 package_kodi-tools-texturepacker-git() {
   pkgdesc="Kodi Texturepacker tool (master branch)"
   depends=('libpng' 'giflib' 'libjpeg-turbo' 'lzo')
+  provides=('kodi-tools-texturepacker=18.0')
+  conflicts=('kodi-tools-texturepacker')
 
   _components=(
     'kodi-tools-texturepacker'
   )
 
-  cd "gitsrc"
+  cd "${srcdir}/gitsrc"
   # install eventclients
   for _cmp in ${_components[@]}; do
-    DESTDIR="$pkgdir" /usr/bin/cmake \
+    DESTDIR="${pkgdir}" /usr/bin/cmake \
       -DCMAKE_INSTALL_COMPONENT="$_cmp" \
       -P cmake_install.cmake
   done
@@ -180,6 +183,8 @@ package_kodi-tools-texturepacker-git() {
 package_kodi-dev-git() {
   pkgdesc="Kodi dev files (master branch)"
   depends=('kodi')
+  conflicts=('kodi-dev')
+  provides=('kodi-dev=18.0')
 
   _components=(
     'kodi-addon-dev'
@@ -193,15 +198,15 @@ package_kodi-dev-git() {
     'kodi-visualization-dev'
   )
 
-  cd "gitsrc"
+  cd "${srcdir}/gitsrc"
   # install eventclients
   for _cmp in ${_components[@]}; do
-    DESTDIR="$pkgdir" /usr/bin/cmake \
+    DESTDIR="${pkgdir}" /usr/bin/cmake \
       -DCMAKE_INSTALL_COMPONENT="$_cmp" \
       -P cmake_install.cmake
   done
 
   # python2 is being used
-  cd "$pkgdir"
+  cd "${pkgdir}"
   grep -lR '#!.*python' * | while read file; do sed -s 's/\(#!.*python\)/\12/g' -i "$file"; done
 }
