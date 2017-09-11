@@ -8,7 +8,7 @@
 
 pkgname=ffmpeg-full
 _srcname=ffmpeg
-pkgver=3.3.2
+pkgver=3.3.3
 pkgrel=4
 pkgdesc='Record, convert and stream audio and video (with almost all possible libs)'
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -136,8 +136,15 @@ conflicts=(
     'ffmpeg-semifull-git'
     'ffmpeg-qsv-git'
 )
-source=("https://ffmpeg.org/releases/ffmpeg-${pkgver}.tar.xz")
-sha256sums=('1998de1ab32616cbf2ff86efc3f1f26e76805ec5dc51e24c041c79edd8262785')
+source=("https://ffmpeg.org/releases/ffmpeg-${pkgver}.tar.xz"
+        'ffmpeg-openjpeg2.2.patch')
+sha512sums=('ac76093bde361294f4449eb905d56a9f6690c56d75bc37358743e7c8d5a26963b1a6c0035a7b6eafcec21b79f23c08c44f403ca580be4485b8e10a5c8cb5fcad'
+            'fd6a28721ecc6926497b83a2ad211c5b76faa6c688981e3d8596c60a44e38cec3fca4e5f11ff258fda7bc85797d38b8882cc755f1817e3375e2ed89acb8e26b4')
+
+prepare() {
+    cd "${_srcname}-${pkgver}"
+    patch -Np1 -i "${srcdir}/ffmpeg-openjpeg2.2.patch"
+}
 
 build() {
     cd "${_srcname}-${pkgver}"
