@@ -1,8 +1,8 @@
 #Maintainer: M0Rf30
 
 pkgname=gyp-git
-pkgver=2115.4801a533
-pkgrel=2
+pkgver=r2118.gc6f47168
+pkgrel=1
 pkgdesc="GYP can Generate Your Projects."
 url="http://code.google.com/p/gyp/"
 arch=('any')
@@ -16,7 +16,7 @@ replaces=('gyp-svn')
 
 pkgver() {
   cd gitsrc
-  echo $(git rev-list --count master).$(git rev-parse --short master)
+  echo r$(git rev-list --count master).g$(git rev-parse --short master)
 }
 
 package() {
