@@ -8,14 +8,14 @@
 pkgbase=nct6775-git
 _pkgbase=nct6775
 pkgname=(nct6775-git nct6775-dkms-git)
-pkgver=r150.g99be68b
-pkgrel=2
-_extramodules=extramodules-4.12-ARCH
+pkgver=r152.gb79b887
+pkgrel=3
+_extramodules=extramodules-4.13-ARCH
 pkgdesc="New driver for Nuvoton NCT6775F, NCT6776F, NCT6779D"
 arch=('i686' 'x86_64')
 url="http://roeck-us.net/linux/drivers/"
 license=("GPL")
-makedepends=('git' 'linux' 'linux-headers>=4.12' 'linux-headers<4.13')
+makedepends=('git' 'linux' 'linux-headers>=4.13' 'linux-headers<4.14')
 provides=('nct6775')
 conflicts=('nct6775')
 source=("gitsrc::git+https://github.com/groeck/nct6775.git"
@@ -37,7 +37,7 @@ build() {
 }
 
 package_nct6775-git() {
-    depends=('linux>=4.12' 'linux<4.13')
+    depends=('linux>=4.13' 'linux<4.14')
     install=$_pkgbase.install
 
     install -Dm644 "$srcdir/gitsrc/$_pkgbase.ko" \
