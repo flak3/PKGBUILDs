@@ -4,7 +4,7 @@
 
 pkgname=libaom-git
 _gitname=aom
-pkgver=r21233.784596d5f1
+pkgver=r22427.efb44bb83d
 pkgrel=1
 pkgdesc="Alliance for Open Media codec library with encoders and decoders for AV1"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -39,6 +39,7 @@ build() {
     -D CONFIG_SHARED=1 \
     -D CONFIG_STATIC=0 \
     -D CONFIG_PIC=1 \
+    -D CONFIG_LIBYUV=1 \
     "${srcdir}"/gitsrc
 
   make
