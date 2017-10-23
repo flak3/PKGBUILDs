@@ -18,7 +18,7 @@
 pkgbase=kodi-git
 pkgname=('kodi-git' 'kodi-eventclients-git' 'kodi-tools-texturepacker-git' 'kodi-dev-git')
 _gitname='xbmc'
-pkgver=18.0.r3883.ee7f71f847
+pkgver=18.0.r4271.75bddb4e05
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kodi.tv"
@@ -153,6 +153,11 @@ package_kodi-eventclients-git() {
   # python2 is being used
   cd "${pkgdir}"
   grep -lR '#!.*python' * | while read file; do sed -s 's/\(#!.*python\)/\12/g' -i "$file"; done
+
+  if [ -d "${pkgdir}/kodi" ]; then
+    install -dm755 "${pkgdir}/usr/lib/python2.7/site-packages"
+    mv "${pkgdir}/kodi" "${pkgdir}/usr/lib/python2.7/site-packages"
+  fi
 }
 
 # kodi-tools-texturepacker
