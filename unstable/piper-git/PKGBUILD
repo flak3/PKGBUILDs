@@ -1,0 +1,46 @@
+# Maintainer: Carlos Silva <r3pek@r3pek.org>
+
+pkgname=piper-git
+pkgver=0.2.900.r17.15c9aed
+pkgrel=1
+pkgdesc='GUI interface to ratbagd, the system daemon for configurable mice'
+arch=('any')
+url='https://github.com/libratbag/piper'
+license=('GPL')
+depends=('python3' 'python-gobject>=3.0' 'libratbag>0.9.900' 'python-evdev' 'python-lxml' 'python-cairo' 'hicolor-icon-theme')
+makedepends=('git' 'meson')
+options=(!emptydirs)
+source=("gitsrc::git+https://github.com/libratbag/piper.git")
+sha512sums=('SKIP')
+conflicts=('piper')
+provides=("piper=${pkgver}")
+
+pkgver() {
+    cd "${srcdir}/gitsrc"
+
+    git describe | sed 's/^v//; s/-/.r/; s/-g/./'
+}
+
+prepare() {
+    cd "${srcdir}/gitsrc"
+
+    if [[ -d build ]]; then
+       rm -rf build
+    fi
+}
+
+build() {
+    cd "${srcdir}/gitsrc"
+
+	# We don't need this
+	sed -i -e "/meson.add_install_script('meson_install.sh')/d" meson.build
+
+	meson builddir --prefix="/usr" -Denable-tests=false
+	ninja -C builddir
+}
+
+package() {
+	cd "${srcdir}/gitsrc"
+
+	DESTDIR="${pkgdir}" ninja -C builddir install
+}
