@@ -4,14 +4,14 @@
 pkgbase=it87-git
 _pkgbase=it87
 pkgname=(it87-git it87-dkms-git)
-pkgver=r88.gc01952b
-pkgrel=2
-_extramodules=extramodules-4.12-ARCH
+pkgver=r125.g6582b47
+pkgrel=1
+_extramodules=extramodules-4.13-ARCH
 pkgdesc="Driver for ITE LPC chips"
 arch=('x86_64' 'i686')
 url="https://github.com/groeck/it87"
 license=('GPL')
-makedepends=('git' 'linux' 'linux-headers>=4.12' 'linux-headers<4.13')
+makedepends=('git' 'linux' 'linux-headers>=4.13' 'linux-headers<4.14')
 provides=('it87')
 conflicts=('it87')
 source=("gitsrc::git+https://github.com/groeck/it87.git"
@@ -33,7 +33,7 @@ build() {
 }
 
 package_it87-git() {
-    depends=('linux>=4.12' 'linux<4.13')
+    depends=('linux>=4.13' 'linux<4.14')
     install=$_pkgbase.install
 
     install -Dm644 "$srcdir/gitsrc/$_pkgbase.ko" \
