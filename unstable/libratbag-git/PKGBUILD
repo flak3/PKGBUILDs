@@ -1,0 +1,49 @@
+# Maintainer: Maxime Gauduin <alucryd@archlinux.org>
+# Contributor: Eric Engestrom <aur [at] engestrom [dot] ch>
+
+pkgname=libratbag-git
+pkgver=0.9.900.r165.b951d83
+pkgrel=1
+pkgdesc='A library to configure gaming mice'
+arch=('i686' 'x86_64')
+url='https://github.com/libratbag/libratbag'
+license=('MIT')
+depends=('glib2' 'libevdev' 'python' 'libudev.so')
+makedepends=('doxygen' 'git' 'graphviz' 'systemd' 'meson')
+source=('gitsrc::git+https://github.com/libratbag/libratbag.git'
+        'libratbag-g403wireless.patch')
+sha512sums=('SKIP'
+            'f76c3a76a6108e112865531aee187c82d220b8dd0f66e88fcaea4c96fd4c03fea68f06d0734da9c47b75c4c1caf9bf7cd37090f9bd4e6e3b994bdde896ff1b79')
+conflicts=('libratbag')
+provides=("libratbag=${pkgver}")
+
+pkgver() {
+    cd "${srcdir}/gitsrc"
+
+    git describe | sed 's/^v//; s/-/.r/; s/-g/./'
+}
+
+prepare() {
+    cd "${srcdir}/gitsrc"
+
+    if [[ -d build ]]; then
+      rm -rf build
+    fi
+
+    patch -p1 -i "${srcdir}/libratbag-g403wireless.patch"
+}
+
+build() {
+    cd "${srcdir}/gitsrc"
+
+    meson builddir --prefix="/usr" -Denable-tests=false
+    ninja -C builddir
+}
+
+package() {
+    cd "${srcdir}/gitsrc"
+
+    DESTDIR="${pkgdir}" ninja -C builddir install
+
+    install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+}
