@@ -1,0 +1,82 @@
+# Maintainer: Niklas <dev@n1klas.net>
+# Contributor: Levente Polyak <anthraxx[at]archlinux[dot]org>
+# Contributor: Eric Bélanger <eric@archlinux.org>
+
+# NOTE: Enabled FDKAAC support.
+
+pkgbase=avidemux-2.6
+_appname=avidemux
+pkgname=('avidemux-cli-2.6' 'avidemux-qt-2.6')
+pkgver=2.6.20
+pkgrel=1
+pkgdesc='Graphical tool to edit video (filter/re-encode/split)'
+url='http://fixounet.free.fr/avidemux/'
+arch=('i686' 'x86_64')
+license=('GPL2')
+makedepends=('cmake' 'libxslt' 'qt5-base' 'jack' 'libvorbis' 'libxv' 'opus' 'desktop-file-utils'
+             'alsa-lib' 'lame' 'xvidcore' 'faad2' 'faac' 'x264' 'libx264' 'x265' 'libsamplerate'
+             'opencore-amr' 'yasm' 'mesa' 'libvpx' 'libpulse' 'libva' 'intltool' 'sqlite'
+             'libvdpau' 'libdca' 'fribidi' 'glu' 'qt5-tools' 'pkg-config' 'libfdk-aac')
+options=('!emptydirs')
+source=("https://downloads.sourceforge.net/avidemux/avidemux_${pkgver}.tar.gz"
+        'cmake.patch')
+sha512sums=('d01d0fc24a3004770bd3923c2debc4fa2752eb71df08cfe423746b9c44a2562ca01d82965ed2563b99572a4bed8034b79487199ce330208b51a3b7f87ccf7103'
+            'ae01c2cb6267bf9be685398c8eeaf4bf72711ad4537bdfe9f30044c18bd149d26583859f7e887a9b0b09d954453426c4815cc7a22c5837b0b5f0bfdac14edbd4')
+
+prepare() {
+    cd "${srcdir}/${_appname}_${pkgver}"
+    sed -i 's|../avidemux/qt4|../avidemux/qt4 -DLRELEASE_EXECUTABLE=/usr/bin/lrelease-qt5|' bootStrap.bash
+    cp avidemux2.desktop avidemux-qt.desktop
+    sed -ri 's|(Name=).*|\1avidemux (Qt)|' avidemux-qt.desktop
+    sed -ri 's|(Exec=).*|\1avidemux3_qt5|' avidemux-qt.desktop
+
+    patch -p1 -i "${srcdir}/cmake.patch"
+}
+
+build() {
+    cd "${srcdir}/${_appname}_${pkgver}"
+    bash bootStrap.bash --with-core --with-cli --with-plugins
+}
+
+package_avidemux-cli-2.6() {
+    depends=('libxml2' 'fontconfig' 'libvpx' 'libva' 'sqlite')
+    optdepends=('lame: for the corresponding audio encoder plugin'
+                'faac: for the corresponding audio encoder plugin'
+                'libfdk-aac: for the corresponding audio encoder plugin'
+                'opus: for the corresponding audio decoder plugin'
+                'opencore-amr: for the corresponding audio decoder plugin'
+                'faad2: for the corresponding audio decoder plugin'
+                'jack: for the corresponding audio device plugin'
+                'libpulse: for the corresponding audio device plugin'
+                'x264: for the corresponding video encoder plugin'
+                'libx264: for the corresponding video encoder plugin'
+                'x265: for the corresponding video encoder plugin'
+                'xvidcore: for the corresponding video encoder plugin'
+                'qt5-base: for the QtScript scripting support'
+                'libdca: for the corresponding audio decoder plugin'
+                'fribidi: for the corresponding video filter plugin')
+    provides=("avidemux-cli=${pkgver}")
+    conflicts=('avidemux-cli' 'avidemux-cli-git')
+
+    cd "${srcdir}/${_appname}_${pkgver}"
+    make -C buildCli DESTDIR="${pkgdir}" install
+    make -C buildCore DESTDIR="${pkgdir}" install
+    make -C buildPluginsCLI DESTDIR="${pkgdir}" install
+    make -C buildPluginsCommon DESTDIR="${pkgdir}" install
+
+    install -Dm 644 avidemux_icon.png "${pkgdir}/usr/share/pixmaps/avidemux.png"
+    install -Dm 644 man/avidemux.1 -t "${pkgdir}/usr/share/man/man1"
+}
+
+package_avidemux-qt-2.6() {
+    pkgdesc='Graphical tool to edit video (filter/re-encode/split) - Qt GUI'
+    depends=("avidemux-cli=${pkgver}" 'qt5-base' 'x264' 'x265' 'libx264' 'glu' 'libxv' 'desktop-file-utils')
+    provides=("avidemux-qt=${pkgver}")
+    conflicts=('avidemux-qt' 'avidemux-qt-git')
+    replaces=('avidemux-gtk')
+
+    cd "${srcdir}/${_appname}_${pkgver}"
+    make -C buildQt5 DESTDIR="${pkgdir}" install
+    make -C buildPluginsQt5 DESTDIR="${pkgdir}" install
+    install -Dm 644 avidemux-qt.desktop -t "${pkgdir}/usr/share/applications"
+}
