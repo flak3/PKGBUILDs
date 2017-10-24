@@ -1,0 +1,29 @@
+# Maintainer: Niklas <dev@n1klas.net>
+# Contributor: Stas Elensky <stas-at-flexsys-dot-com-dot-ua>
+# Contributor: honzor
+
+pkgname=libmodbus
+pkgver=3.1.4
+pkgrel=1
+pkgdesc="A Modbus library for Linux, Mac OS X, FreeBSD, QNX and Win32"
+arch=('i686' 'x86_64')
+url="http://libmodbus.org"
+license=('LGPL')
+depends=('glibc')
+makedepends=('asciidoc' 'xmlto')
+source=("http://libmodbus.org/releases/${pkgname}-${pkgver}.tar.gz")
+sha512sums=('63f73894b27704f5e5b3ca0a364cc366c5b5d24903bb24384155890cf06c0f8e5c707a435a38129402ff6628ef3d611dd0db82f840b79cf1d205ebed2ac5681c')
+
+build() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+
+    autoreconf --install --symlink --force
+    ./configure --prefix=/usr
+    make
+}
+
+package() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+
+    make DESTDIR="${pkgdir}" install
+}
