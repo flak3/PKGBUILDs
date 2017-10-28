@@ -1,0 +1,41 @@
+# Maintainer: Niklas <dev@n1klas.net>
+# Contributor: Dean Galvin <deangalvin3@gmail.com>
+
+pkgbase='python-vincenty'
+_pkgbase='vincenty'
+pkgname=('python-vincenty' 'python2-vincenty')
+pkgdesc="Calculate the geographical distance (in kilometers or miles) between 2 points with extreme accuracy."
+pkgver=0.1.4
+pkgrel=1
+url="https://github.com/maurycyp/vincenty"
+license=('custom:Unlicense')
+arch=('any')
+makedepends=('python-setuptools' 'python2-setuptools')
+source=("https://github.com/maurycyp/${_pkgname}/archive/${pkgver}.tar.gz")
+sha512sums=('d1c791c4b8e5a7f45fc9671a8e95b6aaa7eb05c1e5780fcceac48306ec302d1c6353e52fb88ea528104127255bae9fdcb061931da9e524b8723e3a8f1a863a68')
+
+prepare() {
+    cd "${srcdir}"
+
+    cp -r "${_pkgbase}-${pkgver}"{,-python2}
+}
+
+package_python-vincenty() {
+    depends=('python>=3.4')
+
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+
+    python3 setup.py install --root="${pkgdir}" --optimize=1
+
+    install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+package_python2-vincenty() {
+    depends=('python2>=2.7')
+
+    cd "${srcdir}/${_pkgbase}-${pkgver}-python2"
+
+    python2 setup.py install --root="${pkgdir}" --optimize=1
+
+    install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
