@@ -1,0 +1,40 @@
+# Maintainer: Matthew Treinish <mtreinish@kortar.org>
+
+pkgbase='python-voluptuous'
+_pkgbase='voluptuous'
+pkgname=('python-voluptuous' 'python2-voluptuous')
+pkgver=0.10.5
+pkgrel=1
+pkgdesc="Voluptuous is a Python data validation library"
+arch=('any')
+url='https://pypi.python.org/pypi/voluptuous'
+license=('BSD')
+source=("https://github.com/alecthomas/${_pkgbase}/archive/${pkgver}.tar.gz")
+sha512sums=('3e80b78470edd2e968e11502faa23a9fd081eb11e9d9fc640950b191ad2e2baa97b9e309229cd456c81abcd1e763ce8cfcb7c7a830ef9504b5eb6108fea525c5')
+makedepends=('python-setuptools' 'python2-setuptools')
+
+prepare() {
+    cd "${srcdir}"
+
+    cp -r "${_pkgbase}-${pkgver}"{,-python2}
+}
+
+package_python-voluptuous() {
+    depends=('python')
+
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+
+    python setup.py install --root="${pkgdir}" --optimize=1
+
+    install -D -m644 COPYING ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}
+
+package_python2-voluptuous() {
+    depends=('python2')
+
+    cd "${srcdir}/${_pkgbase}-${pkgver}-python2"
+
+    python2 setup.py install --root="${pkgdir}" --optimize=1
+
+    install -D -m644 COPYING ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}
