@@ -1,0 +1,37 @@
+# Maintainer: Gregoire Seux <grego_aur@familleseux.net>
+
+pkgbase='python-astral'
+_pkgbase='astral'
+pkgname=('python-astral' 'python2-astral')
+pkgver=1.4.1
+_pkgver='fadbf21bc34b89dd2afb128c441557259016c4bb'
+pkgrel=1
+arch=('any')
+pkgdesc="Calculations for the position of the sun and moon."
+url="https://github.com/sffjunkie/astral"
+license=('Apache')
+makedepends=('python-setuptools' 'python2-setuptools')
+source=("https://github.com/sffjunkie/${_pkgbase}/archive/${_pkgver}.tar.gz")
+sha512sums=('15c60149698e9160bbb1481e948b3b26f6ad45cd7280e68c779e88f8a44f8e537366a6063079c6e341239a9c7b3082dfae635f6e50df214125584df971a7a95b')
+
+prepare() {
+    cd "${srcdir}"
+
+    cp -r "${_pkgbase}-${_pkgver}"{,-python2}
+}
+
+package_python-astral() {
+    depends=('python')
+
+    cd "${srcdir}/${_pkgbase}-${_pkgver}"
+
+    python setup.py install --root="${pkgdir}" --optimize=1
+}
+
+package_python2-astral() {
+    depends=('python2')
+
+    cd "${srcdir}/${_pkgbase}-${_pkgver}-python2"
+
+    python2 setup.py install --root="${pkgdir}" --optimize=1
+}
