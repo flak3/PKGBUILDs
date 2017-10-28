@@ -1,0 +1,41 @@
+# Maintainer: Sean Enck <enckse@gmail.com>
+# Contributor: Lukas K. <lu at 0x83 dot eu>
+
+pkgbase='python-webcolors'
+_pkgbase='webcolors'
+pkgname=('python-webcolors' 'python2-webcolors')
+pkgver=1.7
+pkgrel=1
+pkgdesc="Library for working with HTML/CSS color formats in Python"
+arch=("any")
+url="https://github.com/ubernostrum/webcolors"
+license=('BSD')
+makedepends=('python-setuptools' 'python2-setuptools')
+source=("https://github.com/ubernostrum/${_pkgbase}/archive/${pkgver}.tar.gz")
+sha512sums=('103692c6ee25ce7c70c11899722a7ce3adf6afc4ea62de6ecf422b2672c00b2e1dc386f05b3fb3211434895af253dc041c2da90e6c3dec29ea43673878bc3295')
+
+prepare() {
+    cd "${srcdir}"
+
+    cp -r "${_pkgbase}-${pkgver}"{,-python2}
+}
+
+package_python-webcolors() {
+    depends=('python')
+
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+
+    python setup.py install --root="${pkgdir}" --optimize=1
+
+    install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+package_python2-webcolors() {
+    depends=('python2')
+
+    cd "${srcdir}/${_pkgbase}-${pkgver}-python2"
+
+    python2 setup.py install --root="${pkgdir}" --optimize=1
+
+    install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
