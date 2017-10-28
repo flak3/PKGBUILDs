@@ -1,0 +1,21 @@
+# Maintainer: mosh5382 <arch@moshermail.com>
+
+pkgname=python-aiohttp-cors
+_pkgname=aiohttp-cors
+pkgver=0.5.3
+pkgrel=1
+pkgdesc="Implements Cross Origin Resource Sharing (CORS) support for aiohttp"
+arch=('any')
+url="https://github.com/aio-libs/aiohttp-cors"
+license=('Apache')
+depends=('python>=3.4.1' 'python-aiohttp')
+makedepends=('python-setuptools')
+options=('!emptydirs')
+source=("https://github.com/aio-libs/${_pkgname}/archive/v${pkgver}.tar.gz")
+sha512sums=('0813ea48de714c85e361dfdaeef1a69526f7446dcc4ce637139cd333dedea58c635f85cfad1c3ccfb0df6e573f0351f282fdbd9726211d5915ed2ba120206b09')
+
+package() {
+	cd "${srcdir}/${_pkgname}-${pkgver}"
+
+	python setup.py install --root="${pkgdir}" --optimize=1
+}
