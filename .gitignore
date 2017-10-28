@@ -16,3 +16,6 @@ gitsrc/
 .SRCINFO
 
 .directory
+.travis.yml
+
+*/*/.gitignore
