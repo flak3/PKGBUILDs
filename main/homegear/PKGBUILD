@@ -6,7 +6,7 @@ pkgname='homegear'
 _gitname='Homegear'
 pkgdesc='Interface your HomeMatic BidCoS, HomeMatic Wired, MAX!, INSTEON or Philips hue devices with your home automation software or your own control scripts'
 pkgver=0.7.10
-pkgrel=2
+pkgrel=3
 arch=('x86_64' 'i686' 'armv6h' 'armv7h' 'aarch64')
 license=('LGPL3')
 url="https://homegear.eu"
@@ -21,9 +21,9 @@ source=("https://github.com/Homegear/${_gitname}/archive/${pkgver}.tar.gz"
         'homegear-config.patch'
         'homegear-ssl-optional.patch')
 sha512sums=('f494396d58580c8059a8eea5e7b196372b507380af3c48a5036e45bb720b2c2259340bc4853600218ba0722460801fe54edc7e7cebfd6c03e19335153658dc9d'
-            '52b7b1b37c1d6b958081c97a733a0b17207a66c5b3c2a51f8abd1659aa1220ee6805f9ee47d241fa63b9124534b3958f04fc41b8b2e8132487d904550af5a26c'
+            '825ff21b64323122108aba9d4aaf0a0a2ea5107eb225255d29fa95bd2710e00201fda0d99adeed2890fe7eec17b867e4626fd2dacddd5f9743cf6a07d7ca5333'
             'c58a093cc923551e8482503962bfb9f043ee651b2d9954df6a8bf478715848bdac226dc0f3eb4e4f4aa44cdc9c7ca041560db735e27d6cc89122d02e2ffecc2a'
-            '0067d4593d64ec91b4aa15412f09df5c4afc45c8349e33e278cbe80c5d5aa99f25f8f6f14dc14babfa308412bc20d7f4a213da3e61202991bafec871e59451ae'
+            'aed267cb77c6a23a563152a17781cbe12fe14b68ed3d77dc75145c6422c3818f0d3550b5d20609d06e0bf937f24627806c0bfb3201fd27da0b420f6fbd4ebc66'
             '23fb3b1a49f7b3433bd71ca262545aa31d67e7ae88801b41a7c1e306be926a06b7b29389cc63f3342cf8f5e55f908dc0847be6ba7d6b2657018240883a658ce0'
             '4a1ee805f36e47ec31b5409372591c260742c6d12aa6311626ca972eef3ac632ef5309d980d24206330a44c207ed1b92a5d86f6dd8ae44fec1c54fc3785a858f'
             'b55c2e38e3aae22ecd1b3af65aebb7767400cf134f317ffad6f139c4f8681c587fbf7268b098c44796439dc51d9e4c05aadb1fe1d864b8ea1d8902f0409c5127'
@@ -83,10 +83,10 @@ package() {
     install -dm550 "${pkgdir}"/var/lib/homegear/scripts
     install -dm750 "${pkgdir}"/var/lib/homegear/firmware
 
-    install -Dm755 homegear-miscellaneous/misc/Device\ Description\ Files/Template.xml "${pkgdir}"/etc/homegear/devices/254/template.xml
+    install -Dm644 homegear-miscellaneous/misc/Device\ Description\ Files/Template.xml "${pkgdir}"/etc/homegear/devices/254/template.xml
 
-    install -Dm755 "${srcdir}"/homegear.service "${pkgdir}"/usr/lib/systemd/system/homegear.service
-    install -Dm755 "${srcdir}"/homegear.sysusers "${pkgdir}"/usr/lib/sysusers.d/homegear.conf
-    install -Dm755 "${srcdir}"/homegear.tmpfiles "${pkgdir}"/usr/lib/tmpfiles.d/homegear.conf
-    install -Dm755 "${srcdir}"/homegear.logrotate "${pkgdir}"/etc/logrotate.d/homegear
+    install -Dm644 "${srcdir}"/homegear.service "${pkgdir}"/usr/lib/systemd/system/homegear.service
+    install -Dm644 "${srcdir}"/homegear.sysusers "${pkgdir}"/usr/lib/sysusers.d/homegear.conf
+    install -Dm644 "${srcdir}"/homegear.tmpfiles "${pkgdir}"/usr/lib/tmpfiles.d/homegear.conf
+    install -Dm644 "${srcdir}"/homegear.logrotate "${pkgdir}"/etc/logrotate.d/homegear
 }
