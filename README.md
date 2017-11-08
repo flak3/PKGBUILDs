@@ -25,8 +25,8 @@ pacman-key --init
 Then, import my public key and locally sign it:
 
 ```bash
-pacman-key -r 5C7B49424E175733
-pacman-key --lsign-key 5C7B49424E175733
+pacman-key -r D986B44B465CE9DCD26157585C7B49424E175733
+pacman-key --lsign-key D986B44B465CE9DCD26157585C7B49424E175733
 ```
 
 Finally, refresh your pacman cache:
