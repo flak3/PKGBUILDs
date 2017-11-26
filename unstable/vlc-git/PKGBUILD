@@ -68,10 +68,11 @@ makedepends=('aalib'
              'portaudio'
              'projectm'
              'protobuf'
+             'smbclient'
              'twolame'
              'vcdimager'
              'xosd'
-             'smbclient')
+             'qt5-svg')
 optdepends=('aalib: for ASCII art plugin'
             'atk-git: for libnotify plugin'
             'avahi: for service discovery using bonjour protocol'
