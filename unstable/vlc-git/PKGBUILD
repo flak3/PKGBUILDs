@@ -12,7 +12,7 @@
 
 _name=vlc
 pkgname=vlc-git
-pkgver=3.0.0.r14923.g890c91148a
+pkgver=3.0.0.r15662.g50e1f0711f
 pkgrel=1
 pkgdesc="A multi-platform MPEG, VCD/DVD, and DivX player (GIT Version)"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -112,14 +112,13 @@ optdepends=('aalib: for ASCII art plugin'
 conflicts=("${_name}" 'vlc-dev' 'vlc-plugin' 'vlc-stable-git' 'vlc-nightly')
 provides=("${_name}=${pkgver}")
 options=('!emptydirs')
-install="${_name}.install"
 source=('gitsrc::git://git.videolan.org/vlc.git'
         'lua53_compat.patch'
         'update-vlc-plugin-cache.hook'
         'fixaom.patch')
 sha512sums=('SKIP'
             '33cda373aa1fb3ee19a78748e2687f2b93c8662c9fda62ecd122a2e649df8edaceb54dda3991bc38c80737945a143a9e65baa2743a483bb737bb94cd590dc25f'
-            '80357bae69e32b353d3784932d854e294906798e14faffb87c3383c3b6f6bdc57cbabb9c6e3f3c1adf0f8ddbb24153e72104c963cf1934970c2983c96daef9df'
+            '2f1015af384559bf4868bb989c06a7d281a8e32afb175ef397dbf1671bae3540a3a6b073a74ed77ed82e79a81f964a5a58a98c2a3f1b5e5cd5e9ea60d58c737f'
             '49c7807e5130bf409aa3a1669c241088a74498190e3343adf388ec4f475d4fdc0d3e29e14326de36a62ff03fe1c8dba419e350274fe936cf3f211aa3d5f209b1')
 
 pkgver() {
