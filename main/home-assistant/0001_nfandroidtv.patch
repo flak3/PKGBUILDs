@@ -1,0 +1,293 @@
+From 98bec40d4847756809774dc0152e51380471f942 Mon Sep 17 00:00:00 2001
+From: Daniel Perna <danielperna84@gmail.com>
+Date: Sat, 25 Nov 2017 19:43:15 +0100
+Subject: [PATCH 1/6] Fixed icon path, added dynamic icon
+
+---
+ homeassistant/components/notify/nfandroidtv.py | 38 +++++++++++++++++++-------
+ 1 file changed, 28 insertions(+), 10 deletions(-)
+
+diff --git a/homeassistant/components/notify/nfandroidtv.py b/homeassistant/components/notify/nfandroidtv.py
+index 6c4f7e49dde..1aec514b14d 100644
+--- a/homeassistant/components/notify/nfandroidtv.py
++++ b/homeassistant/components/notify/nfandroidtv.py
+@@ -24,6 +24,7 @@
+ CONF_TRANSPARENCY = 'transparency'
+ CONF_COLOR = 'color'
+ CONF_INTERRUPT = 'interrupt'
++CONF_ICON = 'icon'
+ 
+ DEFAULT_DURATION = 5
+ DEFAULT_POSITION = 'bottom-right'
+@@ -31,6 +32,7 @@
+ DEFAULT_COLOR = 'grey'
+ DEFAULT_INTERRUPT = False
+ DEFAULT_TIMEOUT = 5
++DEFAULT_ICON = None
+ 
+ ATTR_DURATION = 'duration'
+ ATTR_POSITION = 'position'
+@@ -38,6 +40,8 @@
+ ATTR_COLOR = 'color'
+ ATTR_BKGCOLOR = 'bkgcolor'
+ ATTR_INTERRUPT = 'interrupt'
++ATTR_ICON = 'icon'
++ATTR_FILENAME = 'filename'
+ 
+ POSITIONS = {
+     'bottom-right': 0,
+@@ -79,6 +83,7 @@
+         vol.In(COLORS.keys()),
+     vol.Optional(CONF_TIMEOUT, default=DEFAULT_TIMEOUT): vol.Coerce(int),
+     vol.Optional(CONF_INTERRUPT, default=DEFAULT_INTERRUPT): cv.boolean,
++    vol.Optional(CONF_ICON): cv.string,
+ })
+ 
+ 
+@@ -92,16 +97,18 @@ def get_service(hass, config, discovery_info=None):
+     color = config.get(CONF_COLOR)
+     interrupt = config.get(CONF_INTERRUPT)
+     timeout = config.get(CONF_TIMEOUT)
++    icon = config.get(CONF_ICON)
+ 
+     return NFAndroidTVNotificationService(
+-        remoteip, duration, position, transparency, color, interrupt, timeout)
++        remoteip, duration, position, transparency, color, interrupt, timeout,
++        icon)
+ 
+ 
+ class NFAndroidTVNotificationService(BaseNotificationService):
+     """Notification service for Notifications for Android TV."""
+ 
+     def __init__(self, remoteip, duration, position, transparency, color,
+-                 interrupt, timeout):
++                 interrupt, timeout, icon):
+         """Initialize the service."""
+         self._target = 'http://{}:7676'.format(remoteip)
+         self._default_duration = duration
+@@ -110,19 +117,18 @@ def __init__(self, remoteip, duration, position, transparency, color,
+         self._default_color = color
+         self._default_interrupt = interrupt
+         self._timeout = timeout
+-        self._icon_file = os.path.join(
+-            os.path.dirname(__file__), '..', 'frontend', 'www_static', 'icons',
+-            'favicon-192x192.png')
++        if icon:
++            self._icon_file = icon
++        else:
++            self._icon_file = os.path.join(
++                os.path.dirname(__file__), '..', '..', '..', 'hass_frontend',
++                'icons', 'favicon-192x192.png')
+ 
+     def send_message(self, message="", **kwargs):
+         """Send a message to a Android TV device."""
+         _LOGGER.debug("Sending notification to: %s", self._target)
+ 
+-        payload = dict(filename=('icon.png',
+-                                 open(self._icon_file, 'rb'),
+-                                 'application/octet-stream',
+-                                 {'Expires': '0'}), type='0',
+-                       title=kwargs.get(ATTR_TITLE, ATTR_TITLE_DEFAULT),
++        payload = dict(title=kwargs.get(ATTR_TITLE, ATTR_TITLE_DEFAULT),
+                        msg=message, duration="%i" % self._default_duration,
+                        position='%i' % POSITIONS.get(self._default_position),
+                        bkgcolor='%s' % COLORS.get(self._default_color),
+@@ -133,6 +139,12 @@ def send_message(self, message="", **kwargs):
+ 
+         data = kwargs.get(ATTR_DATA)
+         if data:
++            if ATTR_ICON in data:
++                icon_file = data.get(ATTR_ICON)
++                payload[ATTR_FILENAME] = ('icon.png',
++                                          open(icon_file, 'rb'),
++                                          'application/octet-stream',
++                                          {'Expires': '0'})
+             if ATTR_DURATION in data:
+                 duration = data.get(ATTR_DURATION)
+                 try:
+@@ -169,6 +181,12 @@ def send_message(self, message="", **kwargs):
+                     _LOGGER.warning("Invalid interrupt-value: %s",
+                                     str(interrupt))
+ 
++        if payload.get(ATTR_FILENAME, None) is None:
++            payload[ATTR_FILENAME] = ('icon.png',
++                                      open(self._icon_file, 'rb'),
++                                      'application/octet-stream',
++                                      {'Expires': '0'})
++
+         try:
+             _LOGGER.debug("Payload: %s", str(payload))
+             response = requests.post(
+
+From a92374b3518e5fb85b7359ec4c6e13455926e5d0 Mon Sep 17 00:00:00 2001
+From: Daniel Perna <danielperna84@gmail.com>
+Date: Sat, 25 Nov 2017 20:48:25 +0100
+Subject: [PATCH 2/6] Addressing requested changes
+
+---
+ homeassistant/components/notify/nfandroidtv.py | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
+
+diff --git a/homeassistant/components/notify/nfandroidtv.py b/homeassistant/components/notify/nfandroidtv.py
+index 1aec514b14d..e58bfab3ad5 100644
+--- a/homeassistant/components/notify/nfandroidtv.py
++++ b/homeassistant/components/notify/nfandroidtv.py
+@@ -137,14 +137,11 @@ def send_message(self, message="", **kwargs):
+                        offset='0', app=ATTR_TITLE_DEFAULT, force='true',
+                        interrupt='%i' % self._default_interrupt)
+ 
++        icon_file = None
+         data = kwargs.get(ATTR_DATA)
+         if data:
+             if ATTR_ICON in data:
+                 icon_file = data.get(ATTR_ICON)
+-                payload[ATTR_FILENAME] = ('icon.png',
+-                                          open(icon_file, 'rb'),
+-                                          'application/octet-stream',
+-                                          {'Expires': '0'})
+             if ATTR_DURATION in data:
+                 duration = data.get(ATTR_DURATION)
+                 try:
+@@ -181,11 +178,12 @@ def send_message(self, message="", **kwargs):
+                     _LOGGER.warning("Invalid interrupt-value: %s",
+                                     str(interrupt))
+ 
+-        if payload.get(ATTR_FILENAME, None) is None:
+-            payload[ATTR_FILENAME] = ('icon.png',
+-                                      open(self._icon_file, 'rb'),
+-                                      'application/octet-stream',
+-                                      {'Expires': '0'})
++        if icon_file is None:
++            icon_file = self._icon_file
++        payload[ATTR_FILENAME] = ('icon.png',
++                                  open(icon_file, 'rb'),
++                                  'application/octet-stream',
++                                  {'Expires': '0'})
+ 
+         try:
+             _LOGGER.debug("Payload: %s", str(payload))
+
+From 7ef60195cbfa1983e4d4997a9f02c266f2960722 Mon Sep 17 00:00:00 2001
+From: Daniel Perna <danielperna84@gmail.com>
+Date: Sat, 25 Nov 2017 22:21:11 +0100
+Subject: [PATCH 3/6] Using DEFAULT_ICON
+
+---
+ homeassistant/components/notify/nfandroidtv.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/homeassistant/components/notify/nfandroidtv.py b/homeassistant/components/notify/nfandroidtv.py
+index e58bfab3ad5..7f1e3075aee 100644
+--- a/homeassistant/components/notify/nfandroidtv.py
++++ b/homeassistant/components/notify/nfandroidtv.py
+@@ -83,7 +83,7 @@
+         vol.In(COLORS.keys()),
+     vol.Optional(CONF_TIMEOUT, default=DEFAULT_TIMEOUT): vol.Coerce(int),
+     vol.Optional(CONF_INTERRUPT, default=DEFAULT_INTERRUPT): cv.boolean,
+-    vol.Optional(CONF_ICON): cv.string,
++    vol.Optional(CONF_ICON, default=DEFAULT_ICON): cv.string,
+ })
+ 
+ 
+
+From f87560a883326be3399b793f3891bebb22c1fb72 Mon Sep 17 00:00:00 2001
+From: Daniel Perna <danielperna84@gmail.com>
+Date: Sun, 26 Nov 2017 15:53:38 +0100
+Subject: [PATCH 4/6] Using CONF_ICON from const
+
+---
+ homeassistant/components/notify/nfandroidtv.py | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/homeassistant/components/notify/nfandroidtv.py b/homeassistant/components/notify/nfandroidtv.py
+index 7f1e3075aee..cae938e2aa7 100644
+--- a/homeassistant/components/notify/nfandroidtv.py
++++ b/homeassistant/components/notify/nfandroidtv.py
+@@ -13,7 +13,7 @@
+ from homeassistant.components.notify import (
+     ATTR_TITLE, ATTR_TITLE_DEFAULT, ATTR_DATA, BaseNotificationService,
+     PLATFORM_SCHEMA)
+-from homeassistant.const import CONF_TIMEOUT
++from homeassistant.const import CONF_TIMEOUT, CONF_ICON
+ import homeassistant.helpers.config_validation as cv
+ 
+ _LOGGER = logging.getLogger(__name__)
+@@ -24,7 +24,6 @@
+ CONF_TRANSPARENCY = 'transparency'
+ CONF_COLOR = 'color'
+ CONF_INTERRUPT = 'interrupt'
+-CONF_ICON = 'icon'
+ 
+ DEFAULT_DURATION = 5
+ DEFAULT_POSITION = 'bottom-right'
+
+From 56a3de97c1fac075260fc3cfa86f451b282dba11 Mon Sep 17 00:00:00 2001
+From: Daniel Perna <danielperna84@gmail.com>
+Date: Mon, 27 Nov 2017 23:13:20 +0100
+Subject: [PATCH 5/6] Getting hass_frontend path via import
+
+---
+ homeassistant/components/notify/nfandroidtv.py | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/homeassistant/components/notify/nfandroidtv.py b/homeassistant/components/notify/nfandroidtv.py
+index cae938e2aa7..52c5321ce8a 100644
+--- a/homeassistant/components/notify/nfandroidtv.py
++++ b/homeassistant/components/notify/nfandroidtv.py
+@@ -116,12 +116,20 @@ def __init__(self, remoteip, duration, position, transparency, color,
+         self._default_color = color
+         self._default_interrupt = interrupt
+         self._timeout = timeout
++        self._icon_file = None
+         if icon:
+             self._icon_file = icon
+         else:
+-            self._icon_file = os.path.join(
+-                os.path.dirname(__file__), '..', '..', '..', 'hass_frontend',
+-                'icons', 'favicon-192x192.png')
++            try:
++                import hass_frontend
++                default_icon = os.path.join(
++                    hass_frontend.__path__[0], 'icons', 'favicon-192x192.png')
++                if os.path.exists(default_icon):
++                    self._icon_file = default_icon
++            except ImportError:
++                _LOGGER.warning(
++                    "hass_frontend icon not found. " + \
++                    "Provide an icon when calling the service.")
+ 
+     def send_message(self, message="", **kwargs):
+         """Send a message to a Android TV device."""
+@@ -177,6 +185,9 @@ def send_message(self, message="", **kwargs):
+                     _LOGGER.warning("Invalid interrupt-value: %s",
+                                     str(interrupt))
+ 
++        if self._icon_file is None and icon_file is None:
++            _LOGGER.error("No icon available. Not sending notification.")
++            return
+         if icon_file is None:
+             icon_file = self._icon_file
+         payload[ATTR_FILENAME] = ('icon.png',
+
+From 5e5ba26a130a5a93a68be0a7777a9037f0a91729 Mon Sep 17 00:00:00 2001
+From: Daniel Perna <danielperna84@gmail.com>
+Date: Mon, 27 Nov 2017 23:14:14 +0100
+Subject: [PATCH 6/6] Lint
+
+---
+ homeassistant/components/notify/nfandroidtv.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/homeassistant/components/notify/nfandroidtv.py b/homeassistant/components/notify/nfandroidtv.py
+index 52c5321ce8a..5bbe2c5d5ca 100644
+--- a/homeassistant/components/notify/nfandroidtv.py
++++ b/homeassistant/components/notify/nfandroidtv.py
+@@ -128,7 +128,7 @@ def __init__(self, remoteip, duration, position, transparency, color,
+                     self._icon_file = default_icon
+             except ImportError:
+                 _LOGGER.warning(
+-                    "hass_frontend icon not found. " + \
++                    "hass_frontend icon not found. " +
+                     "Provide an icon when calling the service.")
+ 
+     def send_message(self, message="", **kwargs):
