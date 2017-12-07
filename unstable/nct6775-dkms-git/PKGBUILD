@@ -1,0 +1,35 @@
+# Maintainer: Niklas <dev@n1klas.net>
+
+pkgname=nct6775-dkms-git
+_pkgbase=nct6775
+pkgver=r152.gb79b887
+pkgrel=4
+pkgdesc="New driver for Nuvoton NCT6775F, NCT6776F, NCT6779D"
+arch=('i686' 'x86_64')
+url="http://roeck-us.net/linux/drivers/"
+license=("GPL")
+depends=('dkms')
+conflicts=('nct6775' 'nct6775-dkms' 'nct6775-git')
+makedepends=('git')
+provides=('nct6775')
+source=("gitsrc::git+https://github.com/groeck/nct6775.git"
+        'dkms.conf.in')
+sha512sums=('SKIP'
+            '3dedb8b6892d8110a28ca44be6c7dc973b11906028cfb231eaa8ac34c2ace920684ba142df21a89bb591505d9e2bfd97b64cc310ae8a49eda612705bbe2b88bc')
+
+pkgver() {
+    cd "${srcdir}/gitsrc"
+    printf "r%s.g%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package_nct6775-dkms-git() {
+    cd "${srcdir}/gitsrc"
+
+    install -dm755 ${pkgdir}/usr/src/${_pkgbase}-${pkgver}
+    cp -a LICENSE Makefile README* *.h *.c ${pkgdir}/usr/src/${_pkgbase}-${pkgver}/
+
+    sed -e "s/@PACKAGE_VERSION@/${pkgver}/" \
+        -e "s/@PACKAGE_NAME@/${_pkgbase}/" \
+        ${srcdir}/dkms.conf.in > \
+        ${pkgdir}/usr/src/${_pkgbase}-${pkgver}/dkms.conf
+}
