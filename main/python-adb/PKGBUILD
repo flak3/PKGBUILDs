@@ -1,0 +1,35 @@
+# Maintainer: Niklas <dev@n1klas.net>
+
+pkgbase=python-adb
+pkgname=('python-adb' 'python2-adb')
+_name='adb'
+pkgver=1.2.0
+pkgrel=1
+pkgdesc="A pure Python implementation of the Android ADB and Fastboot protocols"
+arch=('any')
+url="https://github.com/google/python-adb"
+license=('Apache')
+makedepends=('python-setuptools' 'python2-setuptools')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+md5sums=('6039f290e4c3d02e2353edec89d0d5b4')
+
+prepare() {
+    cd "${srcdir}"
+	cp -a ${_name}-${pkgver}{,-python2}
+}
+
+package_python-adb() {
+    depends=('python-rsa')
+    optdepends=('python-progressbar: progressbar for Fastboot')
+
+    cd "${srcdir}/${_name}-${pkgver}"
+	python setup.py install --root="${pkgdir}" --optimize=1
+}
+
+package_python2-adb() {
+    depends=('python2-m2crypto')
+    optdepends=('python2-progressbar: progressbar for Fastboot')
+
+    cd "${srcdir}/${_name}-${pkgver}-python2"
+	python2 setup.py install --root="${pkgdir}" --optimize=1
+}
