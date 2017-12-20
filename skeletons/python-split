@@ -1,0 +1,32 @@
+# Maintainer: Niklas <dev@n1klas.net>
+
+pkgbase=
+pkgname=()
+_name=
+pkgver=
+pkgrel=1
+pkgdesc=""
+arch=('any')
+url=""
+license=('')
+makedepends=('python-setuptools' 'python2-setuptools')
+source=("")
+sha512sums=()
+
+prepare() {
+    cp -a ${_name}-${pkgver}{,-python2}
+}
+
+package_python-() {
+    depends=()
+
+    cd "${srcdir}/${_name}-${pkgver}"
+    python setup.py install --root="${pkgdir}" --optimize=1
+}
+
+package_python2-() {
+    depends=()
+
+    cd "${srcdir}/${_name}-${pkgver}-python2"
+    python2 setup.py install --root="${pkgdir}" --optimize=1
+}
