@@ -1,0 +1,21 @@
+# Maintainer: James Bunton <jamesbunton@delx.net.au>
+# Maintainer: Bruno Carnazzi <bcarnazzi@gmail.com>
+
+pkgname=regionset
+pkgver=0.2
+pkgrel=4
+pkgdesc="read/sets the region code of DVD drives"
+arch=('i686' 'x86_64')
+url="http://linvdr.org/projects/regionset/"
+license=('GPL')
+source=("http://linvdr.org/download/regionset/${pkgname}-${pkgver}.tar.gz")
+sha512sums=('7d7fa92a2031a1d18032ba0979fe0ee27ff84c02977dc03df394383a2d562925b38eedfd478ee08d60e84de60914278f7880c10a43552345fe36af0c0fee6431')
+
+build() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    make
+}
+
+package() {
+    install -D -m 755 ${srcdir}/${pkgname}-${pkgver}/regionset ${pkgdir}/usr/bin/regionset
+}
