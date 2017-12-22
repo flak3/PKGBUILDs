@@ -1,0 +1,43 @@
+# Maintainer: Niklas <dev@n1klas.net>
+
+pkgbase=python-libusb1
+pkgname=(python-libusb1 python2-libusb1)
+_name=libusb1
+pkgver=1.6.4
+pkgrel=1
+pkgdesc="Pure Python wrapper for libusb"
+arch=('any')
+url="https://github.com/vpelletier/python-libusb1"
+license=('GPL2')
+makedepends=('python-setuptools' 'python2-setuptools')
+depends=('libusb')
+conflicts=("${pkgname}-git")
+source=("https://github.com/vpelletier/python-libusb1/archive/${pkgver}.tar.gz")
+md5sums=('448cf619d6f2d9481fe39a5e0496b877')
+
+prepare() {
+    cd "${srcdir}"
+    cp -a ${pkgbase}-${pkgver}{,-python2}
+}
+
+build() {
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	python setup.py build
+
+	cd "${srcdir}/${pkgbase}-${pkgver}-python2"
+	python2 setup.py build
+}
+
+package_python-libusb1() {
+    depends+=('python')
+
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	python setup.py install --skip-build --root="${pkgdir}" --optimize=1
+}
+
+package_python2-libusb1() {
+    depends+=('python2')
+
+    cd "${srcdir}/${pkgbase}-${pkgver}-python2"
+    python2 setup.py install --skip-build --root="${pkgdir}" --optimize=1
+}
