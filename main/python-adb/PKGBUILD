@@ -4,7 +4,7 @@ pkgbase=python-adb
 pkgname=(python-adb python2-adb)
 _name=adb
 pkgver=1.2.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A pure Python implementation of the Android ADB and Fastboot protocols"
 arch=('any')
 url="https://github.com/google/python-adb"
@@ -16,6 +16,7 @@ sha512sums=('2bb02adbd43602471a48f8de92fd660835b9f0dfc41df30ebdbf6408f410ff56fc7
 prepare() {
     cd "${srcdir}"
 	cp -a ${_name}-${pkgver}{,-python2}
+    find "${_name}-${pkgver}-python2" -name \*.py -exec sed -r 's|^#!(.*)python$|#!\1python2|' -i {} +
 }
 
 build() {
