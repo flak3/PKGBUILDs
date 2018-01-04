@@ -18,7 +18,7 @@
 pkgbase=kodi-git
 pkgname=('kodi-git' 'kodi-eventclients-git' 'kodi-tools-texturepacker-git' 'kodi-dev-git')
 _gitname='xbmc'
-pkgver=18.0.r4663.c3dcbd2ee3
+pkgver=18.0.r5260.daed233cb9
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kodi.tv"
@@ -29,7 +29,6 @@ makedepends=(
   'boost'
   'cmake'
   'curl'
-  'cwiid'
   'doxygen'
   'ffmpeg'
   'fmt'
@@ -172,12 +171,11 @@ package_kodi-eventclients-git() {
   conflicts=('kodi-eventclients')
   provides=('kodi-eventclients=18.0')
 
-  depends=('kodi-git' 'cwiid')
+  depends=('kodi-git')
 
   _components=(
     'kodi-eventclients-common'
     'kodi-eventclients-ps3'
-    'kodi-eventclients-wiiremote'
     'kodi-eventclients-xbmc-send'
   )
 
