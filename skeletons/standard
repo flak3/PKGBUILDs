@@ -1,0 +1,29 @@
+# Maintainer: Niklas <dev@n1klas.net>
+
+pkgname=
+pkgver=
+pkgrel=1
+pkgdesc=""
+arch=('i386' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+url=""
+license=()
+depends=()
+makedepends=()
+provides=()
+conflicts=()
+replaces=()
+source=()
+sha512sums=()
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+
+    ./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+
+	make DESTDIR="${pkgdir}" install
+}
