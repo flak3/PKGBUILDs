@@ -1,0 +1,28 @@
+pkgname=binfmt-support
+pkgver=2.1.8
+pkgrel=2
+pkgdesc="register interpreters for various binary formats"
+arch=('i686' 'x86_64')
+url="http://packages.debian.org/en/sid/binfmt-support"
+license=('GPL')
+depends=('libpipeline')
+makedepends=()
+source=("http://ftp.de.debian.org/debian/pool/main/b/binfmt-support/binfmt-support_${pkgver}.orig.tar.gz"
+	'binfmt-support.service')
+sha512sums=('073c5652b8de467be2810660cb40ef0fd41242f0f21ed61cbdb1874335380fa922557997dc6c339dd355e8e59c528a4969fab3ca235004a41582b5d1bad9dd31'
+            'f4d7953d757a4326c60dd46759b0cb2c42771b7f22fe61bff12b6b3aa2863ab29f22a5c2e2026c27cfea2f9fd6d44e34d504fcf92bd197b3c112996a60624790')
+
+build() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+
+    ./configure --prefix=/usr --libexecdir=/usr/lib --sbindir=/usr/bin --localstatedir=/var
+    make
+}
+
+package() {
+    cd "$srcdir/${pkgname}-${pkgver}"
+
+    make DESTDIR="${pkgdir}" install
+    install -dm0755 "${pkgdir}/var/lib/binfmts"
+    install -Dm644 "${srcdir}/binfmt-support.service" "${pkgdir}/usr/lib/systemd/system/binfmt-support.service"
+}
