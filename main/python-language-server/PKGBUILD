@@ -3,7 +3,7 @@
 pkgbase=python-language-server
 pkgname=(python-language-server python2-language-server)
 _name=language-server
-pkgver=0.12.1
+pkgver=0.12.2
 pkgrel=1
 pkgdesc="A Python implementation of the Language Server Protocol"
 arch=('any')
@@ -11,7 +11,7 @@ url="https://github.com/palantir/python-language-server"
 license=('MIT')
 makedepends=("python-setuptools" "python2-setuptools")
 source=("https://github.com/palantir/python-language-server/archive/${pkgver}.tar.gz")
-sha512sums=('7d582c5483b5e466709e57ba4f69f6ab1e1a44db7275c38cec36c03161e3217253bc82de179c3fc6c65fbcb1d12e17876a3e32f6bc50bdb2ebf0301c98e69759')
+sha512sums=('eb2700758ade19dab530d3ea8b1f97b4e55da2f5d655162106a1631fe644507af308b2101738c7d787ad263f3fc1119c41d7dd3e9ac4f3d7e7e3c8520faef972')
 
 prepare() {
 	cp -a ${pkgbase}-${pkgver}{,-python2}

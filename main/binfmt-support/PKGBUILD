@@ -8,14 +8,14 @@ license=('GPL')
 depends=('libpipeline')
 makedepends=()
 source=("http://ftp.de.debian.org/debian/pool/main/b/binfmt-support/binfmt-support_${pkgver}.orig.tar.gz"
-	'binfmt-support.service')
+	    'binfmt-support.service')
 sha512sums=('073c5652b8de467be2810660cb40ef0fd41242f0f21ed61cbdb1874335380fa922557997dc6c339dd355e8e59c528a4969fab3ca235004a41582b5d1bad9dd31'
             'f4d7953d757a4326c60dd46759b0cb2c42771b7f22fe61bff12b6b3aa2863ab29f22a5c2e2026c27cfea2f9fd6d44e34d504fcf92bd197b3c112996a60624790')
 
 build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
 
-    ./configure --prefix=/usr --libexecdir=/usr/lib --sbindir=/usr/bin --localstatedir=/var
+    ./configure --prefix=/usr --libexecdir=/usr/lib --sbindir=/usr/bin --localstatedir=/var --sysconfdir=/etc
     make
 }
 
