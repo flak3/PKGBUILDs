@@ -6,8 +6,8 @@ index 5342ae3..5dcbdd6 100644
  AM_LDFLAGS = -Wl,-rpath=/lib/homegear -Wl,-rpath=/usr/lib/homegear -Wl,-rpath=/usr/local/lib/homegear
  if HAVE_PHP_HEADERS
  # {{{ PHP libraries
--LIBS += -Wl,-Bstatic -lphp7-homegear -Wl,-Bdynamic -lz -lexslt -lresolv -ledit -lrt -lmcrypt -lltdl -lgmp -lenchant -lrt -lm -lnsl -lxml2 -lxslt -lcrypt -lcrypto -lssl -lgnutls
-+LIBS += -Wl,-Bstatic -lphp-homegear -Wl,-Bdynamic -lz -lexslt -lresolv -ledit -lrt -lmcrypt -lltdl -lgmp -lenchant -lrt -lm -lnsl -lxml2 -lxslt -lcrypt -lcrypto -lssl -lgnutls
+-LIBS += -Wl,-Bstatic -lphp7-homegear -Wl,-Bdynamic -lz -lexslt -lresolv -ledit -lrt -lmcrypt -lltdl -lgmp -lenchant-2 -lrt -lm -lnsl -lxml2 -lxslt -lcrypt -lcrypto -lssl -lgnutls
++LIBS += -Wl,-Bstatic -lphp-homegear -Wl,-Bdynamic -lz -lexslt -lresolv -ledit -lrt -lmcrypt -lltdl -lgmp -lenchant-2 -lrt -lm -lnsl -lxml2 -lxslt -lcrypt -lcrypto -lssl -lgnutls
  # }}}
  endif
  
