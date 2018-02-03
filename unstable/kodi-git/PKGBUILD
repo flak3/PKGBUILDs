@@ -18,7 +18,7 @@
 pkgbase=kodi-git
 pkgname=('kodi-git' 'kodi-eventclients-git' 'kodi-tools-texturepacker-git' 'kodi-dev-git')
 _gitname='xbmc'
-pkgver=18.0.r5260.daed233cb9
+pkgver=18.0.r5541.19b82f9223
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://kodi.tv"
@@ -96,6 +96,8 @@ build() {
     -DCMAKE_INSTALL_LIBDIR=/usr/lib \
     -DENABLE_EVENTCLIENTS=ON \
     -DLIRC_DEVICE=/run/lirc/lircd \
+    -DENABLE_INTERNAL_FFMPEG="no" \
+    -DWITH_FFMPEG="yes" \
     .
   make VERBOSE=1
   make preinstall
