@@ -3,35 +3,42 @@
 pkgbase='python-astral'
 _pkgbase='astral'
 pkgname=('python-astral' 'python2-astral')
-pkgver=1.4.1
-_pkgver='fadbf21bc34b89dd2afb128c441557259016c4bb'
+pkgver=1.5
 pkgrel=1
 arch=('any')
 pkgdesc="Calculations for the position of the sun and moon."
 url="https://github.com/sffjunkie/astral"
 license=('Apache')
 makedepends=('python-setuptools' 'python2-setuptools')
-source=("https://github.com/sffjunkie/${_pkgbase}/archive/${_pkgver}.tar.gz")
-sha512sums=('15c60149698e9160bbb1481e948b3b26f6ad45cd7280e68c779e88f8a44f8e537366a6063079c6e341239a9c7b3082dfae635f6e50df214125584df971a7a95b')
+source=("https://github.com/sffjunkie/${_pkgbase}/archive/${pkgver}.tar.gz")
+sha512sums=('34fcd3baaf4471403eba8fa9f88937df221f3212eee1addba7147018e8c693c6e34dc640a4520ce24c92a3ba57ef9d89e46b48a2dc3095c7d36a07e85845ecc2')
 
 prepare() {
     cd "${srcdir}"
 
-    cp -r "${_pkgbase}-${_pkgver}"{,-python2}
+    cp -r "${_pkgbase}-${pkgver}"{,-python2}
+}
+
+build() {
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
+    python setup.py build
+
+    cd "${srcdir}/${_pkgbase}-${pkgver}-python2"
+    python2 setup.py build
 }
 
 package_python-astral() {
-    depends=('python')
+    depends=('python-pytz')
 
-    cd "${srcdir}/${_pkgbase}-${_pkgver}"
+    cd "${srcdir}/${_pkgbase}-${pkgver}"
 
-    python setup.py install --root="${pkgdir}" --optimize=1
+    python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
 }
 
 package_python2-astral() {
-    depends=('python2')
+    depends=('python2-pytz')
 
-    cd "${srcdir}/${_pkgbase}-${_pkgver}-python2"
+    cd "${srcdir}/${_pkgbase}-${pkgver}-python2"
 
-    python2 setup.py install --root="${pkgdir}" --optimize=1
+    python2 setup.py install --root="${pkgdir}" --optimize=1 --skip-build
 }
