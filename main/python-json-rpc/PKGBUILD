@@ -1,0 +1,34 @@
+# Maintainer: Niklas <dev@n1klas.net>
+
+pkgbase=python-json-rpc
+pkgname=(python-json-rpc python2-json-rpc)
+_name=json-rpc
+pkgver=1.10.8
+pkgrel=1
+pkgdesc="JSON-RPC transport specification implementation"
+arch=('any')
+url="https://github.com/pavlov99/json-rpc"
+license=('MIT')
+makedepends=('python-setuptools' 'python2-setuptools')
+source=("https://github.com/pavlov99/json-rpc/archive/${pkgver}.tar.gz")
+sha512sums=('67639001a34130c587affd57c42adee0aef859426d81cb55227e7f75669982780596a0772cc5fffcbdcbfd6dad7b98fee2f89e7a387681c9b3da601a0e82a7c7')
+
+prepare() {
+	cp -a ${_name}-${pkgver}{,-python2}
+}
+
+package_python-json-rpc() {
+    depends=('python')
+
+    cd "${srcdir}/${_name}-${pkgver}"
+    python setup.py install --root="${pkgdir}" --optimize=1
+    install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+package_python2-json-rpc() {
+    depends=('python2')
+
+    cd "${srcdir}/${_name}-${pkgver}-python2"
+    python2 setup.py install --root="${pkgdir}" --optimize=1
+    install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
