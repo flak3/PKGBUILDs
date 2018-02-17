@@ -1,0 +1,44 @@
+# Maintainer: Niklas <dev@n1klas.net>
+
+pkgbase=python-emoji
+pkgname=(python-emoji python2-emoji)
+_name=emoji
+pkgver=0.4.5
+pkgrel=1
+pkgdesc="Emoji terminal output for Python"
+arch=('any')
+url="https://github.com/carpedm20/emoji"
+license=('BSD')
+makedepends=('python-setuptools' 'python2-setuptools')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha512sums=('363bcb7a92c96b5e5ca7c38290d511665c6eb6269fe45e638fb57761eeb9d806695489b0d51798526e9a3373caf826d9dd18c0b1155a2f21813557faf06a6323')
+
+prepare() {
+    cp -a "${_name}-${pkgver}"{,-python2}
+}
+
+build() {
+    cd "${srcdir}/${_name}-${pkgver}"
+    python setup.py build
+
+    cd "${srcdir}/${_name}-${pkgver}-python2"
+    python2 setup.py build
+}
+
+package_python-emoji() {
+    depends=('python')
+
+    cd "${srcdir}/${_name}-${pkgver}"
+    python setup.py install --root="${pkgdir}" --optimize=1
+
+    install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+package_python2-emoji() {
+    depends=('python2')
+
+    cd "${srcdir}/${_name}-${pkgver}-python2"
+    python2 setup.py install --root="${pkgdir}" --optimize=1
+
+    install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
