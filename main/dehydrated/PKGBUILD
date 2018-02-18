@@ -1,0 +1,76 @@
+# Maintainer: Niklas <dev@n1klas.net>
+# Contributor: VVL <me@ivvl.ru>
+# Contributor: Alexander Görtz <aur@nyloc.de>
+
+# This package is based on work of the openSUSE security project
+# https://build.opensuse.org/package/show/security:dehydrated/dehydrated
+
+pkgname=dehydrated
+pkgver=0.5.0
+pkgrel=4
+pkgdesc="A Let's Encrypt (ACME) client implemented in bash"
+arch=('any')
+url="https://github.com/lukas2511/dehydrated"
+license=('MIT')
+source=("https://github.com/lukas2511/dehydrated/archive/v$pkgver.tar.gz"
+        'dehydrated.timer'
+        'dehydrated.service'
+        'dehydrated.sysusers'
+        'dehydrated.tmpfiles'
+        'README.hooks')
+depends=('curl' 'openssl')
+conflicts=('dehydrated-git')
+sha512sums=('24075aa4ca237646ce98dbcdaec698eebecc9f5dde9119b5d81ee82c577ffebd4cfc59f4fef53fced89bc086c4608b4cd7e063379feee103df37e1512c2e3d4e'
+            'dd78fc87bb5635e9047b90762523334ebc63a46f92c64f689a813428289951c9a041a5a1ff5bcda48d70177d74d8e5b81ca16286e74582de78d82cf77667117b'
+            '4e5c2be0c940318919ee602f04fd05d0355828e1d667c934d56735f49e941ef2e792c976521896c274251bdcf92619eeb3e928f14820cb41dad8055e2a319042'
+            '7f3a2839c5b57fdcb4e769fc5535f15c1459572987326c161326d8ed2f66ec68509f2ce508c6328ba37dda6346dcc655644442db855351acf072f429f85fea56'
+            '4406b0baea56aaf986792452f86850b54210c0fd21de9aab1502e088d3816abafd516cd038318a4e04b12e3e73e5537822d371a4351b79f202c91ffca5dafd4b'
+            'bfc08e948be5566e56a5ce823fedf733e0b88161cae4feeda07d0436c9f6863cc4da665e05f70fdd0d69f8c6582ea734ab088bbb1e67c8d190d9a80fcd72236f')
+backup=('etc/dehydrated/config'
+        'etc/dehydrated/domains.txt'
+        'etc/dehydrated/hook.sh')
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+
+    # Define config directory because we're gonna need it *a lot*
+    pkghome="${pkgdir}/etc/dehydrated"
+    # and also create it
+    install -dm750 "${pkghome}"
+
+    # Put the executable in the right place
+	install -Dm755 dehydrated "${pkgdir}/usr/bin/dehydrated"
+
+    # Adjust config file
+    sed -i "s|#WELLKNOWN=.*|WELLKNOWN=/var/lib/acme-challenge|" docs/examples/config
+    sed -i "s|#DEHYDRATED_USER=|DEHYDRATED_USER=dehydrated|" docs/examples/config
+    sed -i "s|#DEHYDRATED_GROUP=|DEHYDRATED_GROUP=dehydrated|" docs/examples/config
+    sed -i "s|#CONFIG_D=|CONFIG_D=/etc/dehydrated/config.d|" docs/examples/config
+    sed -i 's|#LOCKFILE=.*|LOCKFILE="/run/dehydrated/lock"|' docs/examples/config
+    # And put it in the config directory
+    install -Dm640 docs/examples/config "${pkghome}/config"
+
+    # Create empty directories which can be used for configuration
+    install -dm750 "${pkghome}/config.d"
+    install -dm700 "${pkghome}/certs"
+    install -dm700 "${pkghome}/accounts"
+    install -dm700 "${pkghome}/chains"
+    # Copy example hook script
+	install -Dm750 docs/examples/hook.sh "${pkghome}/hook.sh"
+	touch "${pkghome}/domains.txt"
+    chmod 640 "${pkghome}/domains.txt"
+
+    # Install docs
+	install -Dm644 docs/*.md -t "${pkgdir}/usr/share/docs/dehydrated"
+	install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    install -Dm644 dehydrated.1 "${pkgdir}/usr/share/man/man1/dehydrated.1"
+    install -Dm640 "${srcdir}/README.hooks" "${pkghome}/postrun-hooks.d/README.hooks"
+
+    # Install user and temp file definitions
+    install -Dm644 "${srcdir}/dehydrated.sysusers" "${pkgdir}/usr/lib/sysusers.d/dehydrated.conf"
+    install -Dm644 "${srcdir}/dehydrated.tmpfiles" "${pkgdir}/usr/lib/tmpfiles.d/dehydrated.conf"
+
+    # Install systemd service and time
+	install -Dm644 "${srcdir}/dehydrated.timer" "${pkgdir}/usr/lib/systemd/system/dehydrated.timer"
+	install -Dm644 "${srcdir}/dehydrated.service" "${pkgdir}/usr/lib/systemd/system/dehydrated.service"
+}

@@ -1,0 +1,11 @@
+d /run/dehydrated                              0700 dehydrated dehydrated - -
+d /var/lib/acme-challenge                      0755 dehydrated root       - -
+z /etc/dehydrated/certs                        0700 dehydrated dehydrated - -
+z /etc/dehydrated/accounts                     0700 dehydrated dehydrated - -
+z /etc/dehydrated/chains                       0700 dehydrated dehydrated - -
+z /etc/dehydrated                              0750 root       dehydrated - -
+z /etc/dehydrated/config                       0640 root       dehydrated - -
+z /etc/dehydrated/config.d                     0750 root       dehydrated - -
+z /etc/dehydrated/domains.txt                  0640 root       dehydrated - -
+z /etc/dehydrated/hook.sh                      0750 root       dehydrated - -
+z /etc/dehydrated/postrun-hooks.d/README.hooks 0640 root       dehydrated - -

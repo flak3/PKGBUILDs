@@ -1,0 +1,11 @@
+[Unit]
+Description=Check and renew ACME TLS certificates
+ConditionPathExists=/etc/dehydrated/config
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/dehydrated --cron
+ExecStartPost=-/usr/bin/find -L /etc/dehydrated/postrun-hooks.d -maxdepth 1 -executable -type f -exec {} \;
+User=root
+Group=root
