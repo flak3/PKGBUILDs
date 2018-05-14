@@ -3,7 +3,7 @@
 
 pkgname=tvheadend
 pkgver=4.2.6
-pkgrel=2
+pkgrel=3
 pkgdesc="TV streaming server for Linux"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://tvheadend.org/"
@@ -21,9 +21,9 @@ source=("https://github.com/tvheadend/tvheadend/archive/v${pkgver}.tar.gz"
         'tvheadend.conf.d'
         'ffmpeg-35.patch')
 sha512sums=('6291b0ba1d9af11d5295bf6804988835e746db2d3ebbd465a22e293a1108225c8c361762b78213c881cd15d7dedd16092f28a97c9e5b38f44920848bfbaf9709'
-            '60b6cf58c445485ec1e60164248911eb4ef10645f9548c3f653f6a62cfbf8f9fdf3e86e2caec5f426967bad63fec726344f2e10396d09c9b4430471e742abee0'
-            '8b0df92215e713ae88af7baba17ea08bdad82625a94603038bf122052ea298226515d23ebeacce7fd401bd462312f8d6c73b50218d07da0c70e11d7ae87ae91b'
-            '17c9b98da3cca129e7a7b485256f72faba767c1b6eafe9b4b3ebd9d3b9b0cd9cda5f7f5000c03bb3e26bbef8050539adb968458fbe21954ddef8d6a4dc18ac0f'
+            '289f9be285f15ae2c34a3fd04b660410cc647892033a7b41750853dff9c65f85c444bba5f1693769875be917ba34606aa747e1938f371620bdec86df8871d237'
+            'babb09e6c642213d401ce21366f4365a0ca88785cf6803a4b5e6200c8b92542a6cc7258a243a156ed67ba469a52b226d1ee0b528e200aadc1af81aece922007c'
+            'e4b5d32601c0f8c6e2a7bc299b76694f0655e6776a93879d06eafdfdb49de1b93fe8d1cfcb750c113e38abfa60de617050ebdf780f2e3a8263b2def76d8677b8'
             'c51cba147e7c6e4e48a675c488f80fc89043c028a1e62e96d2743cfc9213eadb7fa152b3829170e9b014b25e7d5bb18d608af892ddc4cce136fb28406a584d14')
 
 prepare() {
