@@ -3,7 +3,7 @@
 pkgbase='python-astral'
 _pkgbase='astral'
 pkgname=('python-astral' 'python2-astral')
-pkgver=1.5
+pkgver=1.6.1
 pkgrel=1
 arch=('any')
 pkgdesc="Calculations for the position of the sun and moon."
@@ -11,7 +11,7 @@ url="https://github.com/sffjunkie/astral"
 license=('Apache')
 makedepends=('python-setuptools' 'python2-setuptools')
 source=("https://github.com/sffjunkie/${_pkgbase}/archive/${pkgver}.tar.gz")
-sha512sums=('34fcd3baaf4471403eba8fa9f88937df221f3212eee1addba7147018e8c693c6e34dc640a4520ce24c92a3ba57ef9d89e46b48a2dc3095c7d36a07e85845ecc2')
+sha512sums=('c987e642224b503b334716a670e85100dd7dcab7c00105be9c2816653dc4c143869a05ff84dd3e1d3d1ab1e968217464f08a759e27e5061bd994a49ffb081e1f')
 
 prepare() {
     cd "${srcdir}"
