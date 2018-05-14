@@ -1,1 +1,2 @@
-m hts video "Tvheadend daemon user" /var/lib/hts
+u hts - "Tvheadend daemon user" /var/lib/hts
+m hts video
